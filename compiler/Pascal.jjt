@@ -1,0 +1,748 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.7";
+  BUILD_PARSER=true;
+  IGNORE_CASE=false;
+  STATIC=false;
+  MULTI=true;
+  //DEBUG_PARSER=true;
+  static = true;
+}
+
+PARSER_BEGIN(Pascal)
+package compiler;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import codeGenerator.*;
+public class Pascal {}
+PARSER_END(Pascal)
+
+
+
+
+SKIP: {
+    " " | "\r" | "\t" | "\n"
+  | <"//"(~["\n","\r"])*("\n" | "\r" | "\r\n")>
+  | <"{"(~["}"])*"}">
+}
+
+TOKEN: { /* Reserved words */
+    <AND       : "and">
+  | <ARRAY     : "array">
+  | <BEGIN     : "begin">
+  | <CASE      : "case"> 
+  | <CONST     : "const"> 
+  | <DIV       : "div">
+  | <DO        : "do">
+  | <DOWNTO    : "downto">
+  | <ELSE      : "else">
+  | <END       : "end">
+  | <FOR       : "for">
+  | <FUNCTION  : "function">
+  | <IF        : "if">
+  | <MOD       : "mod">
+  | <NOT       : "not">
+  | <OF        : "of">
+  | <OR        : "or">
+  | <PROCEDURE : "procedure">
+  | <PROGRAM   : "program">
+  | <RECORD    : "record">
+  | <REPEAT    : "repeat">
+  | <THEN      : "then">
+  | <TO        : "to">
+  | <TYPE      : "type">
+  | <UNTIL     : "until">
+  | <VAR       : "var">
+  | <WHILE     : "while">
+  | <READLN    : "readln">
+  | <WRITELN   : "writeln">
+}
+
+TOKEN: /* Special symbols */
+{
+    <PLUS         : "+">
+  | <MINUS        : "-">
+  | <STAR         : "*">
+  | <SLASH        : "/">
+  | <COLON_EQUALS : ":=">
+
+  | <DOTDOT    : "..">
+  | <DOT       : ".">
+  | <COMMA     : ",">
+  | <SEMICOLON : ";">
+  | <COLON     : ":">
+  | <QUOTE     : "'">
+  | <UP_ARROW  : "^">
+
+  | <EQUALS         : "=">
+  | <NOT_EQUALS     : "<>">
+  | <LESS_THAN      : "<">  
+  | <LESS_EQUALS    : "<=">
+  | <GREATER_THAN   : ">">
+  | <GREATER_EQUALS : ">=">
+
+  | <LEFT_PAREN    : "(">
+  | <RIGHT_PAREN   : ")">
+  | <LEFT_BRACKET  : "[">
+  | <RIGHT_BRACKET : "]">
+  | <LEFT_BRACE    : "{">
+  | <RIGHT_BRACE   : "}">
+}
+
+TOKEN: { /* Identifiers, strings, and numbers */
+    <IDENTIFIER : <LETTER>(<LETTER>|<DIGIT>)*>
+  | <STRING : <QUOTE>(~["'"] | "''")*<QUOTE>>
+
+  | <INTEGER_NUM : <UNSIGNED_NUMBER>>
+  | <REAL_NUM    : <WHOLE><FRACTION><EXPONENT>
+             | <WHOLE><FRACTION>
+             | <WHOLE><EXPONENT>>
+
+  | <#SIGN   : ["+", "-"]>
+  | <#LETTER : ["a"-"z", "A"-"Z"]>
+  | <#DIGIT  : ["0"-"9"]>
+  
+  | <#UNSIGNED_NUMBER : (<DIGIT>)+>
+  | <#WHOLE           : <UNSIGNED_NUMBER>>
+  | <#FRACTION        : "." <UNSIGNED_NUMBER>>
+  | <#EXPONENT        : ["E","e"](<SIGN>)?<UNSIGNED_NUMBER>>
+}
+
+
+ASTprogram program():
+{}
+{
+    program_heading() block() < DOT >
+    {      return jjtThis;    }    
+}
+
+void program_heading():
+{}
+{
+    <PROGRAM> identifier() < SEMICOLON >
+}
+
+void block():
+{}
+{
+    declaration_part() statement_part()
+}
+
+void declaration_part():
+{}
+{
+    [ constant_definition_part() ] [ type_definition_part() ] [ variable_declaration_part() ] procedure_and_function_declaration_part()
+}
+
+void constant_definition_part():
+{}
+{
+    <CONST> ( constant_definition() < SEMICOLON > )+
+}
+
+void constant_definition():
+{}
+{
+    identifier() < EQUALS > constant()
+}
+
+void type_definition_part():
+{}
+{
+    <TYPE> (type_definition() < SEMICOLON >)+
+}
+
+void type_definition():
+{}
+{
+    identifier() < EQUALS > type()
+}
+
+void variable_declaration_part():
+{}
+{
+    <VAR> (variable_declaration() < SEMICOLON >)+
+}
+
+void variable_declaration():
+{}
+{
+    identifier_list() < COLON > type()
+}
+
+void procedure_and_function_declaration_part() #void:
+{}
+{  (    ( (procedure_declaration() | function_declaration()) < SEMICOLON >)*
+  ) #procedure_and_function_declaration_part(>0)
+}
+
+void procedure_declaration():
+{}
+{
+    procedure_heading() < SEMICOLON > procedure_body()
+}
+
+void procedure_body():
+{}
+{
+    block()
+}
+
+void function_declaration():
+{}
+{
+    function_heading() < SEMICOLON > function_body()
+}
+
+void function_body():
+{}
+{
+    block()
+}
+
+void statement_part():
+{}
+{
+    < BEGIN > statement_sequence() < END >
+}
+
+void procedure_heading():
+{}
+{
+    < PROCEDURE > identifier() < LEFT_PAREN > [formal_parameter_list()] <RIGHT_PAREN >
+}
+
+void function_heading():
+{}
+{
+    < FUNCTION > identifier() <LEFT_PAREN > [formal_parameter_list()] < RIGHT_PAREN >< COLON > result_type()
+}
+
+void result_type():
+{}
+{
+    type_identifier()
+}
+
+
+void formal_parameter_list():
+{}
+{
+    formal_parameter_section() ( < SEMICOLON > formal_parameter_section() )*
+}
+
+void formal_parameter_section():
+{}
+{
+    value_parameter_section() |
+    variable_parameter_section()
+}
+
+void value_parameter_section():
+{}
+{
+    identifier_list() < COLON > parameter_type()
+}
+
+void variable_parameter_section():
+{}
+{
+    <VAR> identifier_list() < COLON > parameter_type()
+}
+
+void parameter_type():
+{}
+{
+    type_identifier() | conformant_array_schema()
+}
+
+void conformant_array_schema():
+{}
+{
+    <ARRAY> < LEFT_BRACKET > bound_specification() ( < SEMICOLON > bound_specification() )* < RIGHT_BRACKET >
+    < OF > (type_identifier() | conformant_array_schema())
+}
+
+void bound_specification():
+{}
+{
+    identifier() < DOTDOT > identifier() < COLON > ordinal_type_identifier()
+}
+
+void ordinal_type_identifier():
+{}
+{
+    type_identifier()
+}
+
+void statement_sequence():
+{}
+{
+    statement() (< SEMICOLON > statement())*
+}
+
+void statement()#void:
+{}
+{
+  (    [ simple_statement() | structured_statement() ]
+  )#statement(>0)
+}
+
+void simple_statement():
+{}
+{
+    ( LOOKAHEAD(2) assignment_statement() | procedure_statement()) | io_statement()
+}
+
+void assignment_statement():
+{}
+{
+    variable() < COLON_EQUALS > expression()
+}
+
+void procedure_statement():
+{}
+{
+    procedure_identifier() < LEFT_PAREN > [ actual_parameter_list() ]< RIGHT_PAREN >
+}
+
+void structured_statement():
+{}
+{
+    compound_statement() | repetitive_statement() | conditional_statement()
+}
+
+void compound_statement():
+{}
+{
+    < BEGIN > statement_sequence() < END >
+}
+
+void repetitive_statement():
+{}
+{
+    while_statement() | repeat_statement() | for_statement()
+}
+
+void while_statement():
+{}
+{
+    < WHILE > expression() < DO > statement()
+}
+
+void repeat_statement():
+{}
+{
+    < REPEAT > statement_sequence() <UNTIL> expression()
+}
+
+void for_statement():
+{}
+{
+    < FOR > variable_identifier() < COLON_EQUALS > initial_expression() (<TO> | <DOWNTO>) final_expression() <DO> statement()
+}
+
+void initial_expression():
+{}
+{
+  expression()
+}
+
+void final_expression():
+{}
+{
+  expression()
+}
+
+void conditional_statement():
+{}
+{
+  if_statement() | case_statement()
+}
+
+void if_statement():
+{}
+{
+    <IF> expression() <THEN> statement() [ LOOKAHEAD(1) <ELSE> statement() ]
+}
+
+void case_statement():
+{}
+{
+    < CASE > expression() < OF > case_limb() ( < SEMICOLON > case_limb() ) [ <SEMICOLON >] < END >
+}
+
+void case_limb():
+{}
+{
+    case_label_list() < COLON > statement()
+}
+
+void case_label_list():
+{}
+{
+    constant() ( < COMMA > constant() )*
+}
+
+
+void actual_parameter_list():
+{}
+{
+    actual_parameter() ( < COMMA > actual_parameter() )*
+}
+
+void actual_parameter():
+{}
+{
+    ( LOOKAHEAD(2) actual_value() | actual_variable() )
+}
+
+void actual_value():
+{}
+{
+    expression()
+}
+
+void io_statement():
+{}
+{
+    input_statement() | output_statement()
+}
+
+void input_statement():
+{}
+{
+    <READLN> < LEFT_PAREN > input_list() < RIGHT_PAREN >
+}
+
+void output_statement():
+{}
+{
+    <WRITELN> < LEFT_PAREN > output_list() < RIGHT_PAREN >
+}
+
+void expression():
+{}
+{
+    simple_expression() [ relational_operator() simple_expression()]
+}
+
+void simple_expression() #void:
+{}
+{
+(    [ sign() ] term() ( addition_operator() term() #AdditionNode(3))*
+  ) #SimpleExpressionNode(>1)
+}
+
+void term() #void:
+{}
+{
+	(    factor() ( multiplication_operator() factor() #MultiplicationNode(3))*
+  ) #TermNode(>1)
+}
+
+void factor() #void:
+{}
+{
+    < LEFT_PAREN > expression() < RIGHT_PAREN > | (LOOKAHEAD(2) function_designator() | variable()) |  number() | < STRING > | //TODO:检查variable来确定是否选择variable
+     <NOT> factor()
+}
+
+void relational_operator():
+{Token t;}
+{
+  (      t=< EQUALS >    | t=< NOT_EQUALS >
+    | t=< LESS_THAN >
+    | t=< LESS_EQUALS >
+    | t=< GREATER_THAN >
+    | t=< GREATER_EQUALS > 
+  )  {
+    jjtThis.setOpt(t.image);  }
+}
+
+void addition_operator():
+{Token t;}
+{
+  (  t=< PLUS >
+  | t=< MINUS >
+  | t=< OR >
+)
+{  jjtThis.setOpt(t.image);
+}
+}
+
+void multiplication_operator():
+{Token t;}
+{
+  (    t=< STAR >
+    | t=< SLASH >
+    | t=< DIV >
+    | t=< MOD >
+    | t=< AND >
+  )  {    jjtThis.setOpt(t.image);
+  }}
+
+void variable():
+{}
+{
+  simple_variable() (indexed_suffix() | component_suffix())*
+}
+
+void simple_variable():
+{}
+{
+  //variable_identifier() | field_identifier()
+  identifier()
+}
+void variable_helper():
+{}
+{
+   [( < LEFT_BRACKET > expression() < RIGHT_BRACKET > |  < DOT > field_identifier() ) variable_helper() ]
+}
+
+void indexed_suffix():
+{}
+{
+  < LEFT_BRACKET > expression_list() < RIGHT_BRACKET >}
+
+void component_suffix():
+{}
+{
+  < DOT > field_identifier()}
+
+void function_designator():
+{}
+{
+    function_identifier()  < LEFT_PAREN > [ actual_parameter_list() ] <RIGHT_PAREN >
+}
+
+Type type():
+{Type t;}
+{
+  (    t=type_identifier() | t=structured_type()
+  )
+  {    return t;  }  
+}
+
+void simple_type():
+{}
+{
+    lower_bound() < DOTDOT > upper_bound()
+}
+
+void lower_bound():
+{}
+{
+    constant()
+}
+
+void upper_bound():
+{}
+{
+    constant()
+}
+
+void structured_type():
+{}
+{
+    array_type() | record_type()
+}
+
+void array_type():
+{}
+{
+  < ARRAY > < LEFT_BRACKET > index_type() ( < COMMA > index_type() )* < RIGHT_BRACKET > < OF > element_type()
+}
+
+void index_type():
+{}
+{
+  simple_type()
+}
+
+void element_type():
+{}
+{
+  type()
+}
+
+void record_type():
+{}
+{
+  < RECORD > field_list() < END >
+}
+
+void field_list():
+{}
+{
+   fixed_part() 
+}
+
+void fixed_part():
+{}
+{
+  record_section() ( < SEMICOLON > record_section() )* 
+}
+
+void record_section():
+{}
+{
+  [ identifier_list() < COLON > type() ]
+}
+
+void tag_field():
+{}
+{
+  [ identifier() < COLON > ]
+}
+
+void variant():
+{}
+{
+  case_label_list() < COLON > < LEFT_PAREN > field_list() < RIGHT_PAREN >
+}
+
+void output_list():
+{}
+{
+    output_value() ( < COMMA > output_value())*
+}
+
+void output_value():
+{}
+{
+  expression()
+}
+
+void input_list():
+{}
+{
+  input_variable() ( < COMMA > input_variable())*
+}
+
+void input_variable():
+{}
+{
+    variable()
+}
+
+void record_variable():
+{}
+{
+    variable()
+}
+
+void actual_variable():
+{}
+{
+    variable()
+}
+
+void array_variable():
+{}
+{
+    variable()
+}
+
+void field_identifier():
+{}
+{
+  identifier() 
+}
+
+void constant_identifier():
+{}
+{
+  identifier()
+}
+
+void variable_identifier():
+{}
+{
+  identifier()
+}
+
+void type_identifier():
+{}
+{
+  identifier()
+}
+
+void procedure_identifier():
+{}
+{
+  identifier()
+}
+
+void function_identifier():
+{}
+{
+  identifier()
+}
+
+void bound_identifier():
+{}
+{
+  identifier()
+}
+
+void identifier_list():
+{}
+{
+  identifier() ( < COMMA > identifier() )*
+}
+
+void expression_list() #void:
+{}
+{
+  (  expression() ( < COMMA > expression() )*
+) #expression_list(>1)
+}
+
+void number():
+{}
+{
+  real_number() | integer_number()
+}
+
+void real_number():
+{Token t;}
+{
+  t= < REAL_NUM >
+  {    jjtThis.setNum(t.image);
+  }}
+
+void integer_number():
+{  Token t;}
+{  t= < INTEGER_NUM >
+  {    jjtThis.setNum(t.image);
+  }
+}
+
+void constant():
+{}
+{
+  ( [ sign() ] ( constant_identifier() | number() ) )| < STRING >
+}
+
+void sign():
+{Token t;}
+{
+(    t=< PLUS >
+  | t=< MINUS >
+)
+{  jjtThis.setSign(t.image);
+}
+}
+
+void identifier():
+{
+  Token t;}
+{
+  t=< IDENTIFIER >
+  {
+    jjtThis.setName(t.image);  }}
