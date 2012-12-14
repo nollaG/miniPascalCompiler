@@ -79,65 +79,67 @@ public interface PascalConstants {
   /** RegularExpression Id. */
   int COLON_EQUALS = 40;
   /** RegularExpression Id. */
-  int DOTDOT = 41;
+  int ANDSIGN = 41;
   /** RegularExpression Id. */
-  int DOT = 42;
+  int DOTDOT = 42;
   /** RegularExpression Id. */
-  int COMMA = 43;
+  int DOT = 43;
   /** RegularExpression Id. */
-  int SEMICOLON = 44;
+  int COMMA = 44;
   /** RegularExpression Id. */
-  int COLON = 45;
+  int SEMICOLON = 45;
   /** RegularExpression Id. */
-  int QUOTE = 46;
+  int COLON = 46;
   /** RegularExpression Id. */
-  int UP_ARROW = 47;
+  int QUOTE = 47;
   /** RegularExpression Id. */
-  int EQUALS = 48;
+  int UP_ARROW = 48;
   /** RegularExpression Id. */
-  int NOT_EQUALS = 49;
+  int EQUALS = 49;
   /** RegularExpression Id. */
-  int LESS_THAN = 50;
+  int NOT_EQUALS = 50;
   /** RegularExpression Id. */
-  int LESS_EQUALS = 51;
+  int LESS_THAN = 51;
   /** RegularExpression Id. */
-  int GREATER_THAN = 52;
+  int LESS_EQUALS = 52;
   /** RegularExpression Id. */
-  int GREATER_EQUALS = 53;
+  int GREATER_THAN = 53;
   /** RegularExpression Id. */
-  int LEFT_PAREN = 54;
+  int GREATER_EQUALS = 54;
   /** RegularExpression Id. */
-  int RIGHT_PAREN = 55;
+  int LEFT_PAREN = 55;
   /** RegularExpression Id. */
-  int LEFT_BRACKET = 56;
+  int RIGHT_PAREN = 56;
   /** RegularExpression Id. */
-  int RIGHT_BRACKET = 57;
+  int LEFT_BRACKET = 57;
   /** RegularExpression Id. */
-  int LEFT_BRACE = 58;
+  int RIGHT_BRACKET = 58;
   /** RegularExpression Id. */
-  int RIGHT_BRACE = 59;
+  int LEFT_BRACE = 59;
   /** RegularExpression Id. */
-  int IDENTIFIER = 60;
+  int RIGHT_BRACE = 60;
   /** RegularExpression Id. */
-  int STRING = 61;
+  int IDENTIFIER = 61;
   /** RegularExpression Id. */
-  int INTEGER_NUM = 62;
+  int STRING = 62;
   /** RegularExpression Id. */
-  int REAL_NUM = 63;
+  int INTEGER_NUM = 63;
   /** RegularExpression Id. */
-  int SIGN = 64;
+  int REAL_NUM = 64;
   /** RegularExpression Id. */
-  int LETTER = 65;
+  int SIGN = 65;
   /** RegularExpression Id. */
-  int DIGIT = 66;
+  int LETTER = 66;
   /** RegularExpression Id. */
-  int UNSIGNED_NUMBER = 67;
+  int DIGIT = 67;
   /** RegularExpression Id. */
-  int WHOLE = 68;
+  int UNSIGNED_NUMBER = 68;
   /** RegularExpression Id. */
-  int FRACTION = 69;
+  int WHOLE = 69;
   /** RegularExpression Id. */
-  int EXPONENT = 70;
+  int FRACTION = 70;
+  /** RegularExpression Id. */
+  int EXPONENT = 71;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -185,6 +187,7 @@ public interface PascalConstants {
     "\"*\"",
     "\"/\"",
     "\":=\"",
+    "\"&\"",
     "\"..\"",
     "\".\"",
     "\",\"",

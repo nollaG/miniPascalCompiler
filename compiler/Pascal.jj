@@ -73,7 +73,8 @@ TOKEN: /* Special symbols */
   | <STAR         : "*">
   | <SLASH        : "/">
   | <COLON_EQUALS : ":=">
-
+  | <ANDSIGN          : "&">
+  
   | <DOTDOT    : "..">
   | <DOT       : ".">
   | <COMMA     : ",">
@@ -1419,7 +1420,7 @@ void actual_parameter():
 {/*@bgen(jjtree) actual_parameter */
     try {
 /*@egen*/
-    ( LOOKAHEAD(2) variable() | expression() )/*@bgen(jjtree)*/
+    ( LOOKAHEAD(2)  (< ANDSIGN > variable()) | expression() )/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);

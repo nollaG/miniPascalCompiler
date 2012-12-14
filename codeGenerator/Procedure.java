@@ -23,7 +23,7 @@ public class Procedure {
 				return false;
 			toffset+=parameter_list.get(i).type.getTypeSize();
 		}
-		t.offset=toffset;
+		t.offset=toffset+2;
 		parameter_list.add(t);
 		return true;
 	}
@@ -34,7 +34,7 @@ public class Procedure {
 				return false;
 			toffset+=localvariable_list.get(i).type.getTypeSize();
 		}
-		t.offset=toffset;
+		t.offset=-toffset;
 		localvariable_list.add(t);
 		return true;
 	}

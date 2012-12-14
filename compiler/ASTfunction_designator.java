@@ -31,12 +31,12 @@ class ASTfunction_designator extends SimpleNode {
 				  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
 					  ArrayList<Type> at=((ASTactual_parameter_list)children[1]).getParameterList(gc);
 					  if (!gc.globalFunctionMap.get(functionToken.image).checkParameter(at)) {
-						  throw new GenerateException("Parameter Type Error!\n",functionToken);
+						  throw new GenerateException("Parameter Error!\n",functionToken);
 					  }
 				  }
 			  } else {
 				  if (!gc.globalFunctionMap.get(functionToken.image).checkParameter(new ArrayList<Type>())) {
-					  throw new GenerateException("Parameter Type Error!\n",functionToken);
+					  throw new GenerateException("Parameter Error!\n",functionToken);
 				  }
 			  }
 			  } else {

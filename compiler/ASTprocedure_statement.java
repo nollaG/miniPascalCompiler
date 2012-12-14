@@ -37,12 +37,12 @@ class ASTprocedure_statement extends SimpleNode {
 					  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
 						  ArrayList<Type> at=((ASTactual_parameter_list)children[1]).getParameterList(gc);
 						  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(at)) {
-							  throw new GenerateException("Parameter Type Error!\n",procedure_token);
+							  throw new GenerateException("Parameter Error!\n",procedure_token);
 						  }
 					  }
 				  } else {
 					  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(new ArrayList<Type>())) {
-						  throw new GenerateException("Parameter Type Error!\n",procedure_token);
+						  throw new GenerateException("Parameter Error!\n",procedure_token);
 					  }
 				  }
 			  } else {

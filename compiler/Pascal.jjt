@@ -69,7 +69,8 @@ TOKEN: /* Special symbols */
   | <STAR         : "*">
   | <SLASH        : "/">
   | <COLON_EQUALS : ":=">
-
+  | <ANDSIGN          : "&">
+  
   | <DOTDOT    : "..">
   | <DOT       : ".">
   | <COMMA     : ",">
@@ -362,7 +363,7 @@ void actual_parameter_list():
 void actual_parameter():
 {}
 {
-    ( LOOKAHEAD(2) variable() | expression() )
+    ( LOOKAHEAD(2)  (< ANDSIGN > variable()) | expression() )
 }
 
 void io_statement():

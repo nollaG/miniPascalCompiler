@@ -62,11 +62,16 @@ class ASTvariable extends SimpleNode {
 				  Token t=((ASTidentifier)((ASTfield_identifier)((ASTcomponent_suffix)children[i]).children[0]).children[0]).getToken();
 				  if (currentType instanceof RecordType) {
 					  RecordType rt=(RecordType)currentType;
+					  boolean flag=false;
 					  for (int j=0;j<rt.componentList.size();++j) {
 						  if (rt.componentList.get(j).name.equals(t.image)) {
 							  currentType=rt.componentList.get(j).type;
+							  flag=true;
 							  break;
 						  }
+					  }
+					  if (!flag) {
+						  throw new GenerateException("Invalid Record reference!",t);
 					  }
 				  } else {
 					  throw new GenerateException("Invalid Record reference!",t);

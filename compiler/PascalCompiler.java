@@ -16,7 +16,7 @@ public class PascalCompiler {
     private static final int SS_FIRST = PascalConstants.PLUS;
     private static ASTprogram prevASTProgram=null;
     private static final String specials[] = {
-        "PLUS", "MINUS", "STAR", "SLASH", "COLON_EQUALS",
+        "PLUS", "MINUS", "STAR", "SLASH", "COLON_EQUALS", "ANDSIGN",
         "DOTDOT", "DOT", "COMMA", "SEMICOLON", "COLON", "QUOTE", "UP_ARROW",
         "EQUALS", "NOT_EQUALS", "LESS_THAN", "LESS_EQUALS",
         "GREATER_THAN", "GREATER_EQUALS",
