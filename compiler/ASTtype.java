@@ -11,6 +11,5 @@ class ASTtype extends SimpleNode {
   public ASTtype(Pascal p, int id) {
     super(p, id);
   }
-
 }
 /* JavaCC - OriginalChecksum=e52ef2dd7ad4ee651f9ec365bf1cada3 (do not edit this line) */

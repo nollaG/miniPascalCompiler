@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.RecordType;
+
 public
 class ASTrecord_type extends SimpleNode {
   public ASTrecord_type(int id) {
@@ -10,6 +14,20 @@ class ASTrecord_type extends SimpleNode {
 
   public ASTrecord_type(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return NULL if there is no this type,else return RecordType
+	  RecordType rt=new RecordType();
+	  if (children!=null) {
+		  for (int i=0;i<children.length;++i) {
+			  SimpleNode n=(SimpleNode)children[i];
+			  if (n!=null && n instanceof ASTfield_list) {
+				  ASTfield_list afl=(ASTfield_list)n;
+				  afl.completeRecord(gc,rt);
+			  }
+		  }
+	  }
+	  return rt;
   }
 
 }

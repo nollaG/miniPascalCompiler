@@ -1,15 +1,21 @@
 package codeGenerator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class RecordType extends Type {
-	private LinkedList<Component> componentList;
+	public ArrayList<Component> componentList;
 	public RecordType() {
-		componentList=new LinkedList<Component>();
+		componentList=new ArrayList<Component>();
 	}
-	public void addComponent(Component t) {
+	public boolean addComponent(Component t) {
+		for (int i=0;i<componentList.size();++i) {
+			if (componentList.get(i).name.equals(t.name))
+				return false;
+		}
 		componentList.add(t);
+		return true;
 	}
 	public void clearComponent() {
 		componentList.clear();
@@ -23,6 +29,15 @@ public class RecordType extends Type {
 			total+=ti.next().type.getTypeSize();
 		}
 		return total;
+	}
+	public String toString() {
+		String tmp="[Record] ";
+		Iterator<Component> it=componentList.iterator();
+		while (it.hasNext()) {
+			Component tmp2=it.next();
+			tmp+=String.format("name=%s,Type=%s;",tmp2.name,tmp2.type.toString());
+		}
+		return tmp;
 	}
 
 }

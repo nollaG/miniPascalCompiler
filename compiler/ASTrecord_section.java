@@ -2,6 +2,12 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.Component;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.RecordType;
+import codeGenerator.Type;
+
 public
 class ASTrecord_section extends SimpleNode {
   public ASTrecord_section(int id) {
@@ -11,6 +17,31 @@ class ASTrecord_section extends SimpleNode {
   public ASTrecord_section(Pascal p, int id) {
     super(p, id);
   }
-
+  public void completeRecord(GeneratorContext gc,RecordType rt) throws GenerateException{
+	  Type currentType=null;
+	  if (children!=null) {
+		  for (int i=children.length-1;i>=0;--i) {
+			  SimpleNode n=(SimpleNode)children[i];
+			  if (n!=null && n instanceof ASTtype) {
+				  currentType=(Type)((ASTtype)n).generateCode(gc);
+				  continue;
+			  }
+			  if (n!=null && n instanceof ASTidentifier_list) {
+				  ASTidentifier_list ail=(ASTidentifier_list)n;
+				  if (ail.children!=null)
+					  for (int j=0;j<ail.children.length;++j) {
+						  SimpleNode n2=(SimpleNode)ail.children[j];
+						  if (n2!=null && n2 instanceof ASTidentifier) {
+							  ASTidentifier aid=(ASTidentifier)n2;
+							  if (!rt.addComponent(new Component(aid.getName(),currentType))) {
+								  throw new GenerateException(String.format("Duplicate identifier name '%s'!\n,Line %d,Column %d.\n",
+										  aid.getName(),aid.getToken().beginLine,aid.getToken().beginColumn));
+							  }
+						  }
+					  }
+			  }
+		  }
+	  }
+  }
 }
 /* JavaCC - OriginalChecksum=d247414a6952b1fe8ba82c7e33bc6160 (do not edit this line) */

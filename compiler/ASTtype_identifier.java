@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTtype_identifier extends SimpleNode {
   public ASTtype_identifier(int id) {
@@ -12,5 +15,27 @@ class ASTtype_identifier extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return NULL if there is no this type
+	  Token typename=null;;
+	  if (children!=null) {
+		  for (int i=0;i<children.length;++i) {
+			  SimpleNode n=(SimpleNode)children[i];
+			  if (n!=null && n instanceof ASTidentifier) {
+				  typename=((ASTidentifier)n).getToken();
+				  break;
+			  }
+		  }
+	  }
+	  if (typename==null) {
+		  throw new GenerateException("Something Very bad!\n");
+	  } else {
+		  if (gc.globalTypeMap.containsKey(typename.image)) {
+			  return gc.globalTypeMap.get(typename.image);
+		  } else {
+			  throw new GenerateException(String.format("No type is called '%s'!\n Line %d,Column %d\n",
+					  typename.image,typename.beginLine,typename.beginColumn));
+		  }
+	  }
+  }
 }
 /* JavaCC - OriginalChecksum=4cec3fe5a06128c2adfc6ceb6cd49494 (do not edit this line) */

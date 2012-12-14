@@ -15,6 +15,10 @@ class ASTsign extends SimpleNode {
   public void setSign(String s) {
 	  sign=s;
   }
+  
+  public String getSign() {
+	  return sign;
+  }
   public String toString() { return "sign \"" + sign + "\""; }
 
 }

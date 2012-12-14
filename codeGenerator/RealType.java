@@ -3,7 +3,7 @@ package codeGenerator;
 public class RealType extends Type {
 	int size;
 	public RealType() {
-		size=4;
+		size=1;
 	}
 	@Override
 	public int getTypeSize() {
@@ -11,4 +11,7 @@ public class RealType extends Type {
 		return size;
 	}
 
+	public String toString() {
+		return "RealType";
+	}
 }

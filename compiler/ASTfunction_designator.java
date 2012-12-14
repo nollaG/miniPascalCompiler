@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTfunction_designator extends SimpleNode {
   public ASTfunction_designator(int id) {
@@ -10,6 +14,23 @@ class ASTfunction_designator extends SimpleNode {
 
   public ASTfunction_designator(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  return getType(gc);
+  }
+  
+  public Type getType(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length>0 && children[0]!=null && children[0] instanceof ASTidentifier) {
+		  ASTidentifier aif=(ASTidentifier) children[0];
+		  Token tt=aif.getToken();
+		  if (gc.globalFunctionMap.containsKey(tt.image)) {
+			  return gc.globalFunctionMap.get(tt.image).resultType;
+		  } else {
+			  throw new GenerateException(String.format("No Such Function '%s'!",tt.image),tt);
+		  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }

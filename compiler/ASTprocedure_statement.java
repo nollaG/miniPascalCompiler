@@ -2,6 +2,12 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import java.util.ArrayList;
+
+import codeGenerator.Component;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTprocedure_statement extends SimpleNode {
   public ASTprocedure_statement(int id) {
@@ -10,6 +16,29 @@ class ASTprocedure_statement extends SimpleNode {
 
   public ASTprocedure_statement(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length>0) {
+		  if (children[0]!=null && children[0] instanceof ASTprocedure_identifier) {
+			  ASTprocedure_identifier api=(ASTprocedure_identifier)children[0];
+			  if (api.children!=null && api.children.length>0 && api.children[0]!=null && api.children[0] instanceof ASTidentifier) {
+				  Token procedure_token=((ASTidentifier)api.children[0]).getToken();
+				  if (gc.globalProcedureMap.containsKey(procedure_token.image)) {
+					  //TODO:have procedure
+					  return null;
+				  } else {
+					  throw new GenerateException(String.format("Don't have Procedure '%s'!", procedure_token.image),procedure_token);
+				  }
+			  } else {
+				  throw new GenerateException("Something Very Bad!\n");
+			  }
+		  }
+		/*  if (children.length>1 && children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
+			  ArrayList<Component> tmp=((ASTactual_parameter_list)children[1])
+		  }*/
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }

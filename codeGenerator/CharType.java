@@ -11,4 +11,7 @@ public class CharType extends Type {
 		return size;
 	}
 
+	public String toString() {
+		return "CharType";
+	}
 }

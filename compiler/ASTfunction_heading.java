@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Function;
+import codeGenerator.Type;
+
 public
 class ASTfunction_heading extends SimpleNode {
   public ASTfunction_heading(int id) {
@@ -12,5 +17,26 @@ class ASTfunction_heading extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.currentProcedureOrFunction!=null && gc.currentProcedureOrFunction instanceof Function)
+		  if (children!=null) {
+			  for (int i=0;i<children.length;++i) {
+				  if (children[i]!=null && children[i] instanceof ASTidentifier) {
+					  ASTidentifier aif=(ASTidentifier)children[i];
+					  gc.currentProcedureOrFunction.name=aif.getName();
+					  continue;
+				  }
+				  if (children[i]!=null && children[i] instanceof ASTformal_parameter_list) {
+					  ((ASTformal_parameter_list)children[i]).generateCode(gc);
+					  continue;
+				  }
+				  if (children[i]!=null && children[i] instanceof ASTresult_type) {
+					  ((Function)gc.currentProcedureOrFunction).resultType=(Type)((ASTresult_type)children[i]).generateCode(gc);
+				  }
+			  }
+			  return null;
+		  }
+	  throw new GenerateException("Something Very Bad!\n");
+  }
 }
 /* JavaCC - OriginalChecksum=387f0341d4df9ca7710cb6a2e9065e4a (do not edit this line) */

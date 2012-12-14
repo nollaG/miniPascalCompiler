@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.Function;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTfunction_declaration extends SimpleNode {
   public ASTfunction_declaration(int id) {
@@ -12,5 +16,26 @@ class ASTfunction_declaration extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==2) {
+		  if (children[0]!=null && children[0] instanceof ASTfunction_heading)
+			  if (children[1]!=null && children[1] instanceof ASTfunction_body) {
+				  if (gc.currentProcedureOrFunction==null)
+					  gc.currentProcedureOrFunction=new Function();
+				  else
+					  throw new GenerateException("Can not define a nested function!",((ASTfunction_heading)children[0]).currentToken);
+				  ((ASTfunction_heading)children[0]).generateCode(gc);
+				  if (!gc.globalFunctionMap.containsKey(gc.currentProcedureOrFunction.name)) {
+					  gc.globalFunctionMap.put(gc.currentProcedureOrFunction.name, (Function)gc.currentProcedureOrFunction);
+					  ((ASTfunction_body)children[1]).generateCode(gc);
+					  gc.currentProcedureOrFunction=null;
+					  return null;
+				  } else {
+					  throw new GenerateException(String.format("Duplicate definition of Function '%s'!\n",gc.currentProcedureOrFunction.name));
+				  }
+			  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
+  }
 }
 /* JavaCC - OriginalChecksum=c0e4ec63945c6eef063c3ba4638ba0cb (do not edit this line) */

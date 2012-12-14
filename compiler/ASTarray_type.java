@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.ArrayType;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTarray_type extends SimpleNode {
   public ASTarray_type(int id) {
@@ -10,6 +15,43 @@ class ASTarray_type extends SimpleNode {
 
   public ASTarray_type(Pascal p, int id) {
     super(p, id);
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return NULL if there is no this type,else return ArrayType
+	  Type currentType=null;
+	  ArrayType currentArray=null;
+	  if (children!=null) {
+		  for (int i=children.length-1;i>=0;--i) {
+			  SimpleNode n=(SimpleNode)children[i];
+			  if (n!=null && n instanceof ASTtype) {
+				  currentType=(Type)((ASTtype)n).generateCode(gc);
+				  continue;
+			  }
+			  if (n!=null && n instanceof ASTindex_type) {
+				  ASTindex_type it=(ASTindex_type)n;
+				  it.generateCode(gc);
+				  currentArray=new ArrayType(currentType);
+				  if (it.children!=null) {
+					  for (int j=0;j<it.children.length;++j) {
+						  SimpleNode n2=(SimpleNode)it.children[j];
+						  if (n2!=null && n2 instanceof ASTlower_bound) {
+							  currentArray.low=((ASTlower_bound)n2).getInt();
+							  continue;
+						  }
+						  if (n2!=null && n2 instanceof ASTupper_bound) {
+							  currentArray.high=((ASTupper_bound)n2).getInt();
+							  if (currentArray.high<currentArray.low) {
+								  throw new GenerateException(String.format("Wrong Bound for Array!\nLine %d,Column %d.\n",
+										  ((ASTupper_bound)n2).getToken().beginLine,((ASTupper_bound)n2).getToken().beginColumn));
+							  }
+							  continue;
+						  }
+					  }
+				  }
+				  currentType=currentArray;
+			  }
+		  }
+	  }
+	  return currentArray;
   }
 
 }

@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Procedure;
+
 public
 class ASTprocedure_declaration extends SimpleNode {
   public ASTprocedure_declaration(int id) {
@@ -10,6 +14,28 @@ class ASTprocedure_declaration extends SimpleNode {
 
   public ASTprocedure_declaration(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==2) {
+		  if (children[0]!=null && children[0] instanceof ASTprocedure_heading)
+			  if (children[1]!=null && children[1] instanceof ASTprocedure_body) {
+				  if (gc.currentProcedureOrFunction==null)
+					  gc.currentProcedureOrFunction=new Procedure();
+				  else
+					  throw new GenerateException("Can not define a nested procedure!",((ASTprocedure_heading)children[0]).currentToken);
+				  ((ASTprocedure_heading)children[0]).generateCode(gc);
+				  if (!gc.globalProcedureMap.containsKey(gc.currentProcedureOrFunction.name)) {
+					  gc.globalProcedureMap.put(gc.currentProcedureOrFunction.name, gc.currentProcedureOrFunction);
+					  ((ASTprocedure_body)children[1]).generateCode(gc);
+					  gc.currentProcedureOrFunction=null;
+					  return null;
+				  } else {
+					  throw new GenerateException(String.format("Duplicate definition of Procedure '%s'!\n",gc.currentProcedureOrFunction.name));
+				  }
+			  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }

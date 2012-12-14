@@ -124,4 +124,7 @@ public class Control {
 	{
 		console.setText(PascalCompiler.syntaxParsing(editor.codeEditor.getText()));
 	}
+	public void pressTypeCheckingButton() {
+		console.setText(PascalCompiler.typeChecking());
+	}
 }

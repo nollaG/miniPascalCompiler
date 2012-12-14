@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTnumber extends SimpleNode {
   public ASTnumber(int id) {
@@ -10,6 +14,26 @@ class ASTnumber extends SimpleNode {
 
   public ASTnumber(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Type getType(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==1) {
+		  if (children[0]!=null && children[0] instanceof ASTinteger_number) {
+			  if (gc.globalTypeMap.containsKey("integer")) {
+				  return gc.globalTypeMap.get("integer");
+			  } else {
+				  throw new GenerateException("No integer Type,What are you thinking about!\n");
+			  }
+		  }
+		  if (children[0]!=null && children[0] instanceof ASTreal_number) {
+			  if (gc.globalTypeMap.containsKey("real")) {
+				  return gc.globalTypeMap.get("real");
+			  } else {
+				  throw new GenerateException("No real Type,What are you thinking about!\n");
+			  }
+		  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
   
 

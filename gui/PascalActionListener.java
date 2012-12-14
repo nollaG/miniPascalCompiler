@@ -42,6 +42,9 @@ public class PascalActionListener implements ActionListener{
 		if("synAnalysis".equals(command)) {
 			control.pressSynAnalysisButton();
 		}
+		if ("parCheck".equals(command)) {
+			control.pressTypeCheckingButton();
+		}
 	}
 
 }

@@ -135,20 +135,9 @@ void block():
 void declaration_part():
 {}
 {
-    [ constant_definition_part() ] [ type_definition_part() ] [ variable_declaration_part() ] procedure_and_function_declaration_part()
+    [ type_definition_part() ] [ variable_declaration_part() ] procedure_and_function_declaration_part()
 }
 
-void constant_definition_part():
-{}
-{
-    <CONST> ( constant_definition() < SEMICOLON > )+
-}
-
-void constant_definition():
-{}
-{
-    identifier() < EQUALS > constant()
-}
 
 void type_definition_part():
 {}
@@ -245,38 +234,13 @@ void formal_parameter_section():
 void value_parameter_section():
 {}
 {
-    identifier_list() < COLON > parameter_type()
+    identifier_list() < COLON > type_identifier() 
 }
 
 void variable_parameter_section():
 {}
 {
-    <VAR> identifier_list() < COLON > parameter_type()
-}
-
-void parameter_type():
-{}
-{
-    type_identifier() | conformant_array_schema()
-}
-
-void conformant_array_schema():
-{}
-{
-    <ARRAY> < LEFT_BRACKET > bound_specification() ( < SEMICOLON > bound_specification() )* < RIGHT_BRACKET >
-    < OF > (type_identifier() | conformant_array_schema())
-}
-
-void bound_specification():
-{}
-{
-    identifier() < DOTDOT > identifier() < COLON > ordinal_type_identifier()
-}
-
-void ordinal_type_identifier():
-{}
-{
-    type_identifier()
+    <VAR> identifier_list() < COLON > type_identifier() 
 }
 
 void statement_sequence():
@@ -398,7 +362,7 @@ void actual_parameter_list():
 void actual_parameter():
 {}
 {
-    ( LOOKAHEAD(2) actual_value() | actual_variable() )
+    ( LOOKAHEAD(2) actual_variable() | actual_value() )
 }
 
 void actual_value():
@@ -431,25 +395,22 @@ void expression():
     simple_expression() [ relational_operator() simple_expression()]
 }
 
-void simple_expression() #void:
+void simple_expression():
 {}
 {
-(    [ sign() ] term() ( addition_operator() term() #AdditionNode(3))*
-  ) #SimpleExpressionNode(>1)
+    [ sign() ] term() ( addition_operator() term() #AdditionNode(3))*
 }
 
-void term() #void:
+void term():
 {}
 {
-	(    factor() ( multiplication_operator() factor() #MultiplicationNode(3))*
-  ) #TermNode(>1)
+    factor() ( multiplication_operator() factor() #MultiplicationNode(3))*
 }
 
-void factor() #void:
+void factor():
 {}
 {
-    < LEFT_PAREN > expression() < RIGHT_PAREN > | (LOOKAHEAD(2) function_designator() | variable()) |  number() | < STRING > | //TODO:检查variable来确定是否选择variable
-     <NOT> factor()
+    < LEFT_PAREN > expression() < RIGHT_PAREN > | (LOOKAHEAD(2) function_designator() | variable()) |  number() 
 }
 
 void relational_operator():
@@ -489,19 +450,7 @@ void multiplication_operator():
 void variable():
 {}
 {
-  simple_variable() (indexed_suffix() | component_suffix())*
-}
-
-void simple_variable():
-{}
-{
-  //variable_identifier() | field_identifier()
-  identifier()
-}
-void variable_helper():
-{}
-{
-   [( < LEFT_BRACKET > expression() < RIGHT_BRACKET > |  < DOT > field_identifier() ) variable_helper() ]
+  identifier() (indexed_suffix() | component_suffix())*
 }
 
 void indexed_suffix():
@@ -517,57 +466,46 @@ void component_suffix():
 void function_designator():
 {}
 {
-    function_identifier()  < LEFT_PAREN > [ actual_parameter_list() ] <RIGHT_PAREN >
+    identifier()  < LEFT_PAREN > [ actual_parameter_list() ] <RIGHT_PAREN >
 }
 
-Type type():
-{Type t;}
+void type():
+{}
 {
-  (    t=type_identifier() | t=structured_type()
-  )
-  {    return t;  }  
+    type_identifier() | array_type() | record_type()
 }
 
-void simple_type():
+void index_type():
 {}
 {
     lower_bound() < DOTDOT > upper_bound()
 }
 
 void lower_bound():
-{}
+{Token t;}
 {
-    constant()
+  (
+  [ sign() ] t=< INTEGER_NUM >
+)
+{  jjtThis.setToken(t);
+}
 }
 
 void upper_bound():
-{}
+{Token t;}
 {
-    constant()
+ (
+  [ sign() ] t=< INTEGER_NUM >
+)
+{
+  jjtThis.setToken(t);
 }
-
-void structured_type():
-{}
-{
-    array_type() | record_type()
 }
 
 void array_type():
 {}
 {
-  < ARRAY > < LEFT_BRACKET > index_type() ( < COMMA > index_type() )* < RIGHT_BRACKET > < OF > element_type()
-}
-
-void index_type():
-{}
-{
-  simple_type()
-}
-
-void element_type():
-{}
-{
-  type()
+  < ARRAY > < LEFT_BRACKET > index_type() ( < COMMA > index_type() )* < RIGHT_BRACKET > < OF > type()
 }
 
 void record_type():
@@ -577,12 +515,6 @@ void record_type():
 }
 
 void field_list():
-{}
-{
-   fixed_part() 
-}
-
-void fixed_part():
 {}
 {
   record_section() ( < SEMICOLON > record_section() )* 
@@ -598,12 +530,6 @@ void tag_field():
 {}
 {
   [ identifier() < COLON > ]
-}
-
-void variant():
-{}
-{
-  case_label_list() < COLON > < LEFT_PAREN > field_list() < RIGHT_PAREN >
 }
 
 void output_list():
@@ -678,12 +604,6 @@ void procedure_identifier():
   identifier()
 }
 
-void function_identifier():
-{}
-{
-  identifier()
-}
-
 void bound_identifier():
 {}
 {
@@ -696,11 +616,10 @@ void identifier_list():
   identifier() ( < COMMA > identifier() )*
 }
 
-void expression_list() #void:
+void expression_list():
 {}
 {
-  (  expression() ( < COMMA > expression() )*
-) #expression_list(>1)
+  expression() ( < COMMA > expression() )*
 }
 
 void number():
@@ -745,4 +664,4 @@ void identifier():
 {
   t=< IDENTIFIER >
   {
-    jjtThis.setName(t.image);  }}
+    jjtThis.setToken(t);  }}

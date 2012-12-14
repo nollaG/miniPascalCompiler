@@ -7,104 +7,91 @@ public interface PascalTreeConstants
   public int JJTPROGRAM_HEADING = 1;
   public int JJTBLOCK = 2;
   public int JJTDECLARATION_PART = 3;
-  public int JJTCONSTANT_DEFINITION_PART = 4;
-  public int JJTCONSTANT_DEFINITION = 5;
-  public int JJTTYPE_DEFINITION_PART = 6;
-  public int JJTTYPE_DEFINITION = 7;
-  public int JJTVARIABLE_DECLARATION_PART = 8;
-  public int JJTVARIABLE_DECLARATION = 9;
-  public int JJTVOID = 10;
-  public int JJTPROCEDURE_AND_FUNCTION_DECLARATION_PART = 11;
-  public int JJTPROCEDURE_DECLARATION = 12;
-  public int JJTPROCEDURE_BODY = 13;
-  public int JJTFUNCTION_DECLARATION = 14;
-  public int JJTFUNCTION_BODY = 15;
-  public int JJTSTATEMENT_PART = 16;
-  public int JJTPROCEDURE_HEADING = 17;
-  public int JJTFUNCTION_HEADING = 18;
-  public int JJTRESULT_TYPE = 19;
-  public int JJTFORMAL_PARAMETER_LIST = 20;
-  public int JJTFORMAL_PARAMETER_SECTION = 21;
-  public int JJTVALUE_PARAMETER_SECTION = 22;
-  public int JJTVARIABLE_PARAMETER_SECTION = 23;
-  public int JJTPARAMETER_TYPE = 24;
-  public int JJTCONFORMANT_ARRAY_SCHEMA = 25;
-  public int JJTBOUND_SPECIFICATION = 26;
-  public int JJTORDINAL_TYPE_IDENTIFIER = 27;
-  public int JJTSTATEMENT_SEQUENCE = 28;
-  public int JJTSTATEMENT = 29;
-  public int JJTSIMPLE_STATEMENT = 30;
-  public int JJTASSIGNMENT_STATEMENT = 31;
-  public int JJTPROCEDURE_STATEMENT = 32;
-  public int JJTSTRUCTURED_STATEMENT = 33;
-  public int JJTCOMPOUND_STATEMENT = 34;
-  public int JJTREPETITIVE_STATEMENT = 35;
-  public int JJTWHILE_STATEMENT = 36;
-  public int JJTREPEAT_STATEMENT = 37;
-  public int JJTFOR_STATEMENT = 38;
-  public int JJTINITIAL_EXPRESSION = 39;
-  public int JJTFINAL_EXPRESSION = 40;
-  public int JJTCONDITIONAL_STATEMENT = 41;
-  public int JJTIF_STATEMENT = 42;
-  public int JJTCASE_STATEMENT = 43;
-  public int JJTCASE_LIMB = 44;
-  public int JJTCASE_LABEL_LIST = 45;
-  public int JJTACTUAL_PARAMETER_LIST = 46;
-  public int JJTACTUAL_PARAMETER = 47;
-  public int JJTACTUAL_VALUE = 48;
-  public int JJTIO_STATEMENT = 49;
-  public int JJTINPUT_STATEMENT = 50;
-  public int JJTOUTPUT_STATEMENT = 51;
-  public int JJTEXPRESSION = 52;
-  public int JJTADDITIONNODE = 53;
-  public int JJTSIMPLEEXPRESSIONNODE = 54;
-  public int JJTMULTIPLICATIONNODE = 55;
-  public int JJTTERMNODE = 56;
-  public int JJTRELATIONAL_OPERATOR = 57;
-  public int JJTADDITION_OPERATOR = 58;
-  public int JJTMULTIPLICATION_OPERATOR = 59;
-  public int JJTVARIABLE = 60;
-  public int JJTSIMPLE_VARIABLE = 61;
-  public int JJTVARIABLE_HELPER = 62;
-  public int JJTINDEXED_SUFFIX = 63;
-  public int JJTCOMPONENT_SUFFIX = 64;
-  public int JJTFUNCTION_DESIGNATOR = 65;
-  public int JJTTYPE = 66;
-  public int JJTSIMPLE_TYPE = 67;
-  public int JJTLOWER_BOUND = 68;
-  public int JJTUPPER_BOUND = 69;
-  public int JJTSTRUCTURED_TYPE = 70;
-  public int JJTARRAY_TYPE = 71;
-  public int JJTINDEX_TYPE = 72;
-  public int JJTELEMENT_TYPE = 73;
-  public int JJTRECORD_TYPE = 74;
-  public int JJTFIELD_LIST = 75;
-  public int JJTFIXED_PART = 76;
-  public int JJTRECORD_SECTION = 77;
-  public int JJTTAG_FIELD = 78;
-  public int JJTVARIANT = 79;
-  public int JJTOUTPUT_LIST = 80;
-  public int JJTOUTPUT_VALUE = 81;
-  public int JJTINPUT_LIST = 82;
-  public int JJTINPUT_VARIABLE = 83;
-  public int JJTRECORD_VARIABLE = 84;
-  public int JJTACTUAL_VARIABLE = 85;
-  public int JJTARRAY_VARIABLE = 86;
-  public int JJTFIELD_IDENTIFIER = 87;
-  public int JJTCONSTANT_IDENTIFIER = 88;
-  public int JJTVARIABLE_IDENTIFIER = 89;
-  public int JJTTYPE_IDENTIFIER = 90;
-  public int JJTPROCEDURE_IDENTIFIER = 91;
-  public int JJTFUNCTION_IDENTIFIER = 92;
-  public int JJTBOUND_IDENTIFIER = 93;
-  public int JJTIDENTIFIER_LIST = 94;
-  public int JJTEXPRESSION_LIST = 95;
-  public int JJTNUMBER = 96;
-  public int JJTREAL_NUMBER = 97;
-  public int JJTINTEGER_NUMBER = 98;
-  public int JJTCONSTANT = 99;
-  public int JJTSIGN = 100;
-  public int JJTIDENTIFIER = 101;
+  public int JJTTYPE_DEFINITION_PART = 4;
+  public int JJTTYPE_DEFINITION = 5;
+  public int JJTVARIABLE_DECLARATION_PART = 6;
+  public int JJTVARIABLE_DECLARATION = 7;
+  public int JJTVOID = 8;
+  public int JJTPROCEDURE_AND_FUNCTION_DECLARATION_PART = 9;
+  public int JJTPROCEDURE_DECLARATION = 10;
+  public int JJTPROCEDURE_BODY = 11;
+  public int JJTFUNCTION_DECLARATION = 12;
+  public int JJTFUNCTION_BODY = 13;
+  public int JJTSTATEMENT_PART = 14;
+  public int JJTPROCEDURE_HEADING = 15;
+  public int JJTFUNCTION_HEADING = 16;
+  public int JJTRESULT_TYPE = 17;
+  public int JJTFORMAL_PARAMETER_LIST = 18;
+  public int JJTFORMAL_PARAMETER_SECTION = 19;
+  public int JJTVALUE_PARAMETER_SECTION = 20;
+  public int JJTVARIABLE_PARAMETER_SECTION = 21;
+  public int JJTSTATEMENT_SEQUENCE = 22;
+  public int JJTSTATEMENT = 23;
+  public int JJTSIMPLE_STATEMENT = 24;
+  public int JJTASSIGNMENT_STATEMENT = 25;
+  public int JJTPROCEDURE_STATEMENT = 26;
+  public int JJTSTRUCTURED_STATEMENT = 27;
+  public int JJTCOMPOUND_STATEMENT = 28;
+  public int JJTREPETITIVE_STATEMENT = 29;
+  public int JJTWHILE_STATEMENT = 30;
+  public int JJTREPEAT_STATEMENT = 31;
+  public int JJTFOR_STATEMENT = 32;
+  public int JJTINITIAL_EXPRESSION = 33;
+  public int JJTFINAL_EXPRESSION = 34;
+  public int JJTCONDITIONAL_STATEMENT = 35;
+  public int JJTIF_STATEMENT = 36;
+  public int JJTCASE_STATEMENT = 37;
+  public int JJTCASE_LIMB = 38;
+  public int JJTCASE_LABEL_LIST = 39;
+  public int JJTACTUAL_PARAMETER_LIST = 40;
+  public int JJTACTUAL_PARAMETER = 41;
+  public int JJTACTUAL_VALUE = 42;
+  public int JJTIO_STATEMENT = 43;
+  public int JJTINPUT_STATEMENT = 44;
+  public int JJTOUTPUT_STATEMENT = 45;
+  public int JJTEXPRESSION = 46;
+  public int JJTSIMPLE_EXPRESSION = 47;
+  public int JJTADDITIONNODE = 48;
+  public int JJTTERM = 49;
+  public int JJTMULTIPLICATIONNODE = 50;
+  public int JJTFACTOR = 51;
+  public int JJTRELATIONAL_OPERATOR = 52;
+  public int JJTADDITION_OPERATOR = 53;
+  public int JJTMULTIPLICATION_OPERATOR = 54;
+  public int JJTVARIABLE = 55;
+  public int JJTINDEXED_SUFFIX = 56;
+  public int JJTCOMPONENT_SUFFIX = 57;
+  public int JJTFUNCTION_DESIGNATOR = 58;
+  public int JJTTYPE = 59;
+  public int JJTINDEX_TYPE = 60;
+  public int JJTLOWER_BOUND = 61;
+  public int JJTUPPER_BOUND = 62;
+  public int JJTARRAY_TYPE = 63;
+  public int JJTRECORD_TYPE = 64;
+  public int JJTFIELD_LIST = 65;
+  public int JJTRECORD_SECTION = 66;
+  public int JJTTAG_FIELD = 67;
+  public int JJTOUTPUT_LIST = 68;
+  public int JJTOUTPUT_VALUE = 69;
+  public int JJTINPUT_LIST = 70;
+  public int JJTINPUT_VARIABLE = 71;
+  public int JJTRECORD_VARIABLE = 72;
+  public int JJTACTUAL_VARIABLE = 73;
+  public int JJTARRAY_VARIABLE = 74;
+  public int JJTFIELD_IDENTIFIER = 75;
+  public int JJTCONSTANT_IDENTIFIER = 76;
+  public int JJTVARIABLE_IDENTIFIER = 77;
+  public int JJTTYPE_IDENTIFIER = 78;
+  public int JJTPROCEDURE_IDENTIFIER = 79;
+  public int JJTBOUND_IDENTIFIER = 80;
+  public int JJTIDENTIFIER_LIST = 81;
+  public int JJTEXPRESSION_LIST = 82;
+  public int JJTNUMBER = 83;
+  public int JJTREAL_NUMBER = 84;
+  public int JJTINTEGER_NUMBER = 85;
+  public int JJTCONSTANT = 86;
+  public int JJTSIGN = 87;
+  public int JJTIDENTIFIER = 88;
 
 
   public String[] jjtNodeName = {
@@ -112,8 +99,6 @@ public interface PascalTreeConstants
     "program_heading",
     "block",
     "declaration_part",
-    "constant_definition_part",
-    "constant_definition",
     "type_definition_part",
     "type_definition",
     "variable_declaration_part",
@@ -132,10 +117,6 @@ public interface PascalTreeConstants
     "formal_parameter_section",
     "value_parameter_section",
     "variable_parameter_section",
-    "parameter_type",
-    "conformant_array_schema",
-    "bound_specification",
-    "ordinal_type_identifier",
     "statement_sequence",
     "statement",
     "simple_statement",
@@ -161,33 +142,27 @@ public interface PascalTreeConstants
     "input_statement",
     "output_statement",
     "expression",
+    "simple_expression",
     "AdditionNode",
-    "SimpleExpressionNode",
+    "term",
     "MultiplicationNode",
-    "TermNode",
+    "factor",
     "relational_operator",
     "addition_operator",
     "multiplication_operator",
     "variable",
-    "simple_variable",
-    "variable_helper",
     "indexed_suffix",
     "component_suffix",
     "function_designator",
     "type",
-    "simple_type",
+    "index_type",
     "lower_bound",
     "upper_bound",
-    "structured_type",
     "array_type",
-    "index_type",
-    "element_type",
     "record_type",
     "field_list",
-    "fixed_part",
     "record_section",
     "tag_field",
-    "variant",
     "output_list",
     "output_value",
     "input_list",
@@ -200,7 +175,6 @@ public interface PascalTreeConstants
     "variable_identifier",
     "type_identifier",
     "procedure_identifier",
-    "function_identifier",
     "bound_identifier",
     "identifier_list",
     "expression_list",
@@ -212,4 +186,4 @@ public interface PascalTreeConstants
     "identifier",
   };
 }
-/* JavaCC - OriginalChecksum=e647e921d912439d922996ae118f9b95 (do not edit this line) */
+/* JavaCC - OriginalChecksum=5aec7d44f1c3e2270f79beb2eabd3bd8 (do not edit this line) */

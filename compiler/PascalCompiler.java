@@ -2,13 +2,19 @@ package compiler;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
+import java.util.Iterator;
+
+import codeGenerator.Function;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Procedure;
 
 public class PascalCompiler {
     private static final int RW_FIRST = PascalConstants.AND;
     private static final int RW_LAST  = PascalConstants.WRITELN;
 
     private static final int SS_FIRST = PascalConstants.PLUS;
-
+    private static ASTprogram prevASTProgram=null;
     private static final String specials[] = {
         "PLUS", "MINUS", "STAR", "SLASH", "COLON_EQUALS",
         "DOTDOT", "DOT", "COMMA", "SEMICOLON", "COLON", "QUOTE", "UP_ARROW",
@@ -57,12 +63,35 @@ public class PascalCompiler {
 		StringBuilder result=new StringBuilder();
 		try{
 			ASTprogram n=parser.program();
+			prevASTProgram=n;
 			n.dump(">",result,0);
 			return result.toString();
 		}catch(TokenMgrError e1) {
         	return "Lexical Analysis Error!\n"+e1.getMessage();
 		}catch(ParseException e2){
 			return "Syntax Parsing Error!\n"+e2.getMessage();
+		}
+	}
+	
+	public static String typeChecking() {
+		if (prevASTProgram==null) {
+			return "Please Run Syntax Parsing First!\n";
+		}
+		try {
+			GeneratorContext gc=new GeneratorContext();
+			prevASTProgram.generateCode(gc);
+			Iterator<Function> itf=gc.globalFunctionMap.values().iterator();
+			while (itf.hasNext()) {
+				System.out.println(itf.next().toString());
+			}
+			Iterator<Procedure> itp=gc.globalProcedureMap.values().iterator();
+			while (itp.hasNext()) {
+				System.out.println(itp.next().toString());
+			}
+			System.out.println("Global Variable:"+gc.globalVariableListToString());
+			return "Type Checking Success!\nNo Error Detected.\n";
+		}catch(GenerateException e) {
+			return "Generate Error!\n"+e.getMessage();
 		}
 	}
 }

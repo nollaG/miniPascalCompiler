@@ -4,7 +4,7 @@ package compiler;
 
 public
 class ASTidentifier extends SimpleNode {
-	private String name;
+	private Token name;
   public ASTidentifier(int id) {
     super(id);
   }
@@ -13,8 +13,14 @@ class ASTidentifier extends SimpleNode {
     super(p, id);
   }
  
-  public void setName(String n) {
+  public void setToken(Token n) {
 	  name=n;
+  }
+  public Token getToken() {
+	  return name;
+  }
+  public String getName() {
+	  return name.image;
   }
   public String toString() {
 	  return "<Identifier>: "+name;

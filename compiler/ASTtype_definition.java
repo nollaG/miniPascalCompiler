@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTtype_definition extends SimpleNode {
   public ASTtype_definition(int id) {
@@ -10,6 +14,27 @@ class ASTtype_definition extends SimpleNode {
 
   public ASTtype_definition(Pascal p, int id) {
     super(p, id);
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==2) {
+		  if (children[0]!=null && children[0] instanceof ASTidentifier)
+			  if (children[1]!=null && children[1] instanceof ASTtype) {
+				  Type type=(Type)((ASTtype)children[1]).generateCode(gc);
+				  String typename=((ASTidentifier)children[0]).getName();
+				  if (type!=null) {
+					  if(!gc.globalTypeMap.containsKey(typename)) {
+						  gc.globalTypeMap.put(typename, type);
+						  return null;
+					  } else {
+						  throw new GenerateException(String.format("There is a type called %s\nLine %d,Column %d.\n",
+								  typename,((ASTidentifier)children[0]).getToken().beginLine,((ASTidentifier)children[0]).getToken().beginColumn));
+					  }
+				  } else {
+					  throw new GenerateException("Something Very Bad!\n");
+				  }
+			  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }

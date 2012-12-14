@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.Component;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTvariable_parameter_section extends SimpleNode {
   public ASTvariable_parameter_section(int id) {
@@ -10,6 +15,31 @@ class ASTvariable_parameter_section extends SimpleNode {
 
   public ASTvariable_parameter_section(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.currentProcedureOrFunction!=null)
+		  if (children!=null && children.length==2) {
+			  if (children[0]!=null && children[0] instanceof ASTidentifier_list)
+				  if (children[1]!=null && children[1] instanceof ASTtype_identifier) {
+					  Type type=(Type)((ASTtype_identifier)children[1]).generateCode(gc);
+					  ASTidentifier_list ail=(ASTidentifier_list)children[0];
+					  if (ail.children!=null)
+						  for (int i=0;i<ail.children.length;++i) {
+							  SimpleNode n=(SimpleNode)ail.children[i];
+							  if (n!=null && n instanceof ASTidentifier) {
+								  ASTidentifier tmp=(ASTidentifier)n;
+								  Component tc=new Component(tmp.getName(),type);
+								  tc.isVar=true;
+								  if (!gc.currentProcedureOrFunction.addParameter(tc))
+									  throw new GenerateException(String.format("Duplicate parameter name '%s'!\nLine %d,Column %d.\n",
+											  tmp.getName(),tmp.getToken().beginLine,tmp.getToken().beginColumn));
+							  }
+						  }
+					  return null;
+				  }
+		  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }
