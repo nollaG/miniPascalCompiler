@@ -2,6 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.ArrayType;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.IntegerType;
+import codeGenerator.RealType;
+import codeGenerator.RecordType;
+import codeGenerator.Type;
+
 public
 class ASTaddition_operator extends SimpleNode {
 	private String opt;

@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTfactor extends SimpleNode {
   public ASTfactor(int id) {
@@ -12,5 +16,24 @@ class ASTfactor extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  return getType(gc);
+  }
+  public Type getType(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTexpression) {
+		  return ((ASTexpression)children[0]).getType(gc);
+	  }
+	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTfunction_designator) {
+		  return ((ASTfunction_designator)children[0]).getType(gc);
+	  }
+	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTvariable) {
+		  return ((ASTvariable)children[0]).getType(gc);
+	  }
+	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTnumber) {
+		  return ((ASTnumber)children[0]).getType(gc);
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
+		  
+  }
 }
 /* JavaCC - OriginalChecksum=76499624d73485416cc661318ccbcce2 (do not edit this line) */

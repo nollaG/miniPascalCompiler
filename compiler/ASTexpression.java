@@ -2,6 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.ArrayType;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.IntegerType;
+import codeGenerator.RealType;
+import codeGenerator.RecordType;
+import codeGenerator.Type;
+
 public
 class ASTexpression extends SimpleNode {
   public ASTexpression(int id) {
@@ -10,6 +18,51 @@ class ASTexpression extends SimpleNode {
 
   public ASTexpression(Pascal p, int id) {
     super(p, id);
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  return getType(gc);
+  }
+  public Type getType(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==1) {
+		  if (children[0]!=null && children[0] instanceof ASTsimple_expression) {
+			  return ((ASTsimple_expression)children[0]).getType(gc);
+		  }
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  if (children!=null && children.length==3) {
+		  Type type1=null,type2=null;
+		  if (children[0]!=null && children[0] instanceof ASTsimple_expression) {
+			  type1=((ASTsimple_expression)children[0]).getType(gc);
+		  } else {
+			  throw new GenerateException("Something Very Bad!\n");
+		  }
+		  if (children[2]!=null && children[2] instanceof ASTsimple_expression) {
+			  type2=((ASTsimple_expression)children[2]).getType(gc);
+		  } else {
+			  throw new GenerateException("Something Very Bad!\n");
+		  }
+		  if (type1 instanceof RecordType || type1 instanceof ArrayType) {
+			  throw new GenerateException("Can not Compare with NonSimpleType!",((SimpleNode)children[0]).currentToken);
+		  }
+		  if (type2 instanceof RecordType || type2 instanceof ArrayType) {
+			  throw new GenerateException("Can not Compare with NonSimpleType!",((SimpleNode)children[2]).currentToken);
+		  }
+		  if (type1 instanceof RealType) {
+			  return type1;
+		  }
+	      if (type2 instanceof RealType) {
+			  return type2;
+		  }
+		  if (type1 instanceof IntegerType) {
+			  return type1;
+		  }
+	      if (type2 instanceof IntegerType) {
+			  return type2;
+		  }
+	      return type1;
+		  
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
 
 }

@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
+
 public
 class ASTsimple_expression extends SimpleNode {
   public ASTsimple_expression(int id) {
@@ -12,5 +16,20 @@ class ASTsimple_expression extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  return getType(gc);
+  }
+  public Type getType(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length>0) {
+		  if (children[children.length-1]!=null && children[children.length-1] instanceof ASTterm) {
+			  return ((ASTterm)children[children.length-1]).getType(gc);
+		  }
+		  if (children[children.length-1]!=null && children[children.length-1] instanceof ASTAdditionNode) {
+			  return ((ASTAdditionNode)children[children.length-1]).getType(gc);
+		  }
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
+  }
 }
 /* JavaCC - OriginalChecksum=0252df8f841766d851e359f9a67640c0 (do not edit this line) */
