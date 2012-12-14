@@ -45,53 +45,51 @@ public interface PascalTreeConstants
   public int JJTCASE_LABEL_LIST = 39;
   public int JJTACTUAL_PARAMETER_LIST = 40;
   public int JJTACTUAL_PARAMETER = 41;
-  public int JJTACTUAL_VALUE = 42;
-  public int JJTIO_STATEMENT = 43;
-  public int JJTINPUT_STATEMENT = 44;
-  public int JJTOUTPUT_STATEMENT = 45;
-  public int JJTEXPRESSION = 46;
-  public int JJTSIMPLE_EXPRESSION = 47;
-  public int JJTADDITIONNODE = 48;
-  public int JJTTERM = 49;
-  public int JJTMULTIPLICATIONNODE = 50;
-  public int JJTFACTOR = 51;
-  public int JJTRELATIONAL_OPERATOR = 52;
-  public int JJTADDITION_OPERATOR = 53;
-  public int JJTMULTIPLICATION_OPERATOR = 54;
-  public int JJTVARIABLE = 55;
-  public int JJTINDEXED_SUFFIX = 56;
-  public int JJTCOMPONENT_SUFFIX = 57;
-  public int JJTFUNCTION_DESIGNATOR = 58;
-  public int JJTTYPE = 59;
-  public int JJTINDEX_TYPE = 60;
-  public int JJTLOWER_BOUND = 61;
-  public int JJTUPPER_BOUND = 62;
-  public int JJTARRAY_TYPE = 63;
-  public int JJTRECORD_TYPE = 64;
-  public int JJTFIELD_LIST = 65;
-  public int JJTRECORD_SECTION = 66;
-  public int JJTTAG_FIELD = 67;
-  public int JJTOUTPUT_LIST = 68;
-  public int JJTOUTPUT_VALUE = 69;
-  public int JJTINPUT_LIST = 70;
-  public int JJTINPUT_VARIABLE = 71;
-  public int JJTRECORD_VARIABLE = 72;
-  public int JJTACTUAL_VARIABLE = 73;
-  public int JJTARRAY_VARIABLE = 74;
-  public int JJTFIELD_IDENTIFIER = 75;
-  public int JJTCONSTANT_IDENTIFIER = 76;
-  public int JJTVARIABLE_IDENTIFIER = 77;
-  public int JJTTYPE_IDENTIFIER = 78;
-  public int JJTPROCEDURE_IDENTIFIER = 79;
-  public int JJTBOUND_IDENTIFIER = 80;
-  public int JJTIDENTIFIER_LIST = 81;
-  public int JJTEXPRESSION_LIST = 82;
-  public int JJTNUMBER = 83;
-  public int JJTREAL_NUMBER = 84;
-  public int JJTINTEGER_NUMBER = 85;
-  public int JJTCONSTANT = 86;
-  public int JJTSIGN = 87;
-  public int JJTIDENTIFIER = 88;
+  public int JJTIO_STATEMENT = 42;
+  public int JJTINPUT_STATEMENT = 43;
+  public int JJTOUTPUT_STATEMENT = 44;
+  public int JJTEXPRESSION = 45;
+  public int JJTSIMPLE_EXPRESSION = 46;
+  public int JJTADDITIONNODE = 47;
+  public int JJTTERM = 48;
+  public int JJTMULTIPLICATIONNODE = 49;
+  public int JJTFACTOR = 50;
+  public int JJTRELATIONAL_OPERATOR = 51;
+  public int JJTADDITION_OPERATOR = 52;
+  public int JJTMULTIPLICATION_OPERATOR = 53;
+  public int JJTVARIABLE = 54;
+  public int JJTINDEXED_SUFFIX = 55;
+  public int JJTCOMPONENT_SUFFIX = 56;
+  public int JJTFUNCTION_DESIGNATOR = 57;
+  public int JJTTYPE = 58;
+  public int JJTINDEX_TYPE = 59;
+  public int JJTLOWER_BOUND = 60;
+  public int JJTUPPER_BOUND = 61;
+  public int JJTARRAY_TYPE = 62;
+  public int JJTRECORD_TYPE = 63;
+  public int JJTFIELD_LIST = 64;
+  public int JJTRECORD_SECTION = 65;
+  public int JJTTAG_FIELD = 66;
+  public int JJTOUTPUT_LIST = 67;
+  public int JJTOUTPUT_VALUE = 68;
+  public int JJTINPUT_LIST = 69;
+  public int JJTINPUT_VARIABLE = 70;
+  public int JJTRECORD_VARIABLE = 71;
+  public int JJTARRAY_VARIABLE = 72;
+  public int JJTFIELD_IDENTIFIER = 73;
+  public int JJTCONSTANT_IDENTIFIER = 74;
+  public int JJTVARIABLE_IDENTIFIER = 75;
+  public int JJTTYPE_IDENTIFIER = 76;
+  public int JJTPROCEDURE_IDENTIFIER = 77;
+  public int JJTBOUND_IDENTIFIER = 78;
+  public int JJTIDENTIFIER_LIST = 79;
+  public int JJTEXPRESSION_LIST = 80;
+  public int JJTNUMBER = 81;
+  public int JJTREAL_NUMBER = 82;
+  public int JJTINTEGER_NUMBER = 83;
+  public int JJTCONSTANT = 84;
+  public int JJTSIGN = 85;
+  public int JJTIDENTIFIER = 86;
 
 
   public String[] jjtNodeName = {
@@ -137,7 +135,6 @@ public interface PascalTreeConstants
     "case_label_list",
     "actual_parameter_list",
     "actual_parameter",
-    "actual_value",
     "io_statement",
     "input_statement",
     "output_statement",
@@ -168,7 +165,6 @@ public interface PascalTreeConstants
     "input_list",
     "input_variable",
     "record_variable",
-    "actual_variable",
     "array_variable",
     "field_identifier",
     "constant_identifier",
@@ -186,4 +182,4 @@ public interface PascalTreeConstants
     "identifier",
   };
 }
-/* JavaCC - OriginalChecksum=5aec7d44f1c3e2270f79beb2eabd3bd8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=b012d7016cedef658c9c2996459e5a47 (do not edit this line) */

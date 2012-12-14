@@ -1419,39 +1419,7 @@ void actual_parameter():
 {/*@bgen(jjtree) actual_parameter */
     try {
 /*@egen*/
-    ( LOOKAHEAD(2) actual_variable() | actual_value() )/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
-}
-
-void actual_value():
-{/*@bgen(jjtree) actual_value */
-  ASTactual_value jjtn000 = new ASTactual_value(JJTACTUAL_VALUE);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) actual_value */
-    try {
-/*@egen*/
-    expression()/*@bgen(jjtree)*/
+    ( LOOKAHEAD(2) variable() | expression() )/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -2430,37 +2398,6 @@ void record_variable():
 /*@egen*/
 }
 
-void actual_variable():
-{/*@bgen(jjtree) actual_variable */
-  ASTactual_variable jjtn000 = new ASTactual_variable(JJTACTUAL_VARIABLE);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) actual_variable */
-    try {
-/*@egen*/
-    variable()/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
-}
 
 void array_variable():
 {/*@bgen(jjtree) array_variable */

@@ -362,13 +362,7 @@ void actual_parameter_list():
 void actual_parameter():
 {}
 {
-    ( LOOKAHEAD(2) actual_variable() | actual_value() )
-}
-
-void actual_value():
-{}
-{
-    expression()
+    ( LOOKAHEAD(2) variable() | expression() )
 }
 
 void io_statement():
@@ -562,11 +556,6 @@ void record_variable():
     variable()
 }
 
-void actual_variable():
-{}
-{
-    variable()
-}
 
 void array_variable():
 {}

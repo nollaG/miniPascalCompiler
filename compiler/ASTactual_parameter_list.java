@@ -5,6 +5,9 @@ package compiler;
 import java.util.ArrayList;
 
 import codeGenerator.Component;
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
 
 public
 class ASTactual_parameter_list extends SimpleNode {
@@ -16,9 +19,19 @@ class ASTactual_parameter_list extends SimpleNode {
     super(p, id);
   }
   
- /* public ArrayList<Component> getParameterList() {
-	  
-  }*/
+  public ArrayList<Type> getParameterList(GeneratorContext gc) throws GenerateException{
+	  if (children!=null) {
+		  ArrayList<Type> ac=new ArrayList<Type>();
+		  for (int i=0;i<children.length;++i) {
+			  if (children[i]!=null && children[i] instanceof ASTactual_parameter) {
+				  ASTactual_parameter aap = (ASTactual_parameter)children[i];
+				  aap.addParameter(gc,ac);
+			  }
+		  }
+		  return ac;
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
+  }
 
 }
 /* JavaCC - OriginalChecksum=cd244dc7b8ab2f7864b9a18863d5f3a1 (do not edit this line) */

@@ -5,6 +5,7 @@ package compiler;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
 import codeGenerator.Type;
+import codeGenerator.IntegerType;
 import codeGenerator.Variable;
 import codeGenerator.ArrayType;
 import codeGenerator.RecordType;
@@ -41,10 +42,14 @@ class ASTvariable extends SimpleNode {
 					  ASTexpression_list ael=(ASTexpression_list)ais.children[0];
 					  if (ael.children!=null) {
 						  for (int j=0;j<ael.children.length;++j) {
+							  if (((ASTexpression)ael.children[j]).getType(gc) instanceof IntegerType) {
 							  if (currentType instanceof ArrayType) {
 								  currentType=((ArrayType)currentType).elementType;
 							  } else {
 								  throw new GenerateException("Invalid Array reference!",((ASTexpression)ael.children[j]).currentToken);
+							  }
+							  } else {
+								  throw new GenerateException("index expression must be Integer!",((ASTexpression)ael.children[j]).currentToken);
 							  }
 						  }
 					  }

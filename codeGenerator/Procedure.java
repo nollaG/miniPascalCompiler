@@ -56,6 +56,15 @@ public class Procedure {
 		return tmp;
 	}
 	
+	public boolean checkParameter(ArrayList<Type> ac) {
+		if (ac.size()!=parameter_list.size()) return false;
+		for (int i=0;i<ac.size();++i) {
+			if (ac.get(i)!=parameter_list.get(i).type)
+				return false;
+		}
+		return true;
+	}
+	
 	public String toString() {
 		return String.format("Procedure:%s\n" +
 				"ParameterList:%s\n" +

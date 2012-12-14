@@ -91,7 +91,7 @@ public class PascalCompiler {
 			System.out.println("Global Variable:"+gc.globalVariableListToString());
 			return "Type Checking Success!\nNo Error Detected.\n";
 		}catch(GenerateException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return "Generate Error!\n"+e.getMessage();
 		}
 	}

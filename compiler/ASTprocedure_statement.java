@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import codeGenerator.Component;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Type;
 
 public
 class ASTprocedure_statement extends SimpleNode {
@@ -26,17 +27,29 @@ class ASTprocedure_statement extends SimpleNode {
 				  Token procedure_token=((ASTidentifier)api.children[0]).getToken();
 				  if (gc.globalProcedureMap.containsKey(procedure_token.image)) {
 					  //TODO:have procedure
-					  return null;
 				  } else {
 					  throw new GenerateException(String.format("Don't have Procedure '%s'!", procedure_token.image),procedure_token);
+				  }
+				  
+				  
+				  
+				  if (children.length>1) {
+					  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
+						  ArrayList<Type> at=((ASTactual_parameter_list)children[1]).getParameterList(gc);
+						  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(at)) {
+							  throw new GenerateException("Parameter Type Error!\n",procedure_token);
+						  }
+					  }
+				  } else {
+					  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(new ArrayList<Type>())) {
+						  throw new GenerateException("Parameter Type Error!\n",procedure_token);
+					  }
 				  }
 			  } else {
 				  throw new GenerateException("Something Very Bad!\n");
 			  }
+			  return null;
 		  }
-		/*  if (children.length>1 && children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
-			  ArrayList<Component> tmp=((ASTactual_parameter_list)children[1])
-		  }*/
 	  }
 	  throw new GenerateException("Something Very Bad!\n");
   }
