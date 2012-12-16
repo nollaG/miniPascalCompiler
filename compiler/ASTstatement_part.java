@@ -39,6 +39,7 @@ class ASTstatement_part extends SimpleNode {
 		  if (gc.currentProcedureOrFunction!=null) {
 			  gc.code.append("mov rsp,rbp\n");
 			  gc.code.append("pop rbp\n");
+			  gc.code.append("ret\n");
 		  }
 	  }
 	  return null;

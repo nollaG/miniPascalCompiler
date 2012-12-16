@@ -28,7 +28,7 @@ class ASTrepeat_statement extends SimpleNode {
 					  Register rg1=((ASTexpression)children[1]).generateCode(gc);
 					  gc.code.append(String.format("cmp %s,0\n",rg1));
 					  rg1.release();
-					  gc.code.append(String.format("jne %s\n", beginLabel));
+					  gc.code.append(String.format("je %s\n", beginLabel));
 				  } else {
 					  throw new GenerateException("Something Very Bad!\n");
 				  }

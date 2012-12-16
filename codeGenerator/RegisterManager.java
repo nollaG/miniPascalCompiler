@@ -29,10 +29,19 @@ public class RegisterManager {
 	
 	public boolean checkAllFree() {
 		for (int i=0;i<registerList.size();++i) {
-			if (registerList.get(i).isFree==false)
+			if (!registerList.get(i).isFree)
 				return false;
 		}
 		return true;
+	}
+	
+	public ArrayList<Register> getAllUsed() {
+		ArrayList<Register> tmp=new ArrayList<Register>();
+		for (int i=0;i<registerList.size();++i)
+			if (!registerList.get(i).isFree) {
+				tmp.add(registerList.get(i));
+			}
+		return tmp;
 	}
 	
 	public Register getRegisterByName(String s) {

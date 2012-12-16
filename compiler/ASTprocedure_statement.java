@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import codeGenerator.Component;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -20,38 +21,112 @@ class ASTprocedure_statement extends SimpleNode {
   }
   
   public Object generateCode(GeneratorContext gc) throws GenerateException{
-	  if (children!=null && children.length>0) {
-		  if (children[0]!=null && children[0] instanceof ASTprocedure_identifier) {
-			  ASTprocedure_identifier api=(ASTprocedure_identifier)children[0];
-			  if (api.children!=null && api.children.length>0 && api.children[0]!=null && api.children[0] instanceof ASTidentifier) {
-				  Token procedure_token=((ASTidentifier)api.children[0]).getToken();
-				  if (gc.globalProcedureMap.containsKey(procedure_token.image)) {
-					  //TODO:have procedure
-				  } else {
-					  throw new GenerateException(String.format("Don't have Procedure '%s'!", procedure_token.image),procedure_token);
-				  }
-				  
-				  
-				  
-				  if (children.length>1) {
-					  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
-						  ArrayList<Type> at=((ASTactual_parameter_list)children[1]).getParameterList(gc);
-						  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(at)) {
+	  if (!gc.generate) {
+		  if (children!=null && children.length>0) {
+			  if (children[0]!=null && children[0] instanceof ASTprocedure_identifier) {
+				  ASTprocedure_identifier api=(ASTprocedure_identifier)children[0];
+				  if (api.children!=null && api.children.length>0 && api.children[0]!=null && api.children[0] instanceof ASTidentifier) {
+					  Token procedure_token=((ASTidentifier)api.children[0]).getToken();
+					  if (gc.globalProcedureMap.containsKey(procedure_token.image)) {
+						  //TODO:have procedure
+					  } else {
+						  throw new GenerateException(String.format("Don't have Procedure '%s'!", procedure_token.image),procedure_token);
+					  }
+
+
+
+					  if (children.length>1) {
+						  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
+							  ArrayList<Type> at=((ASTactual_parameter_list)children[1]).getParameterList(gc);
+							  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(at)) {
+								  throw new GenerateException("Parameter Error!\n",procedure_token);
+							  }
+						  }
+					  } else {
+						  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(new ArrayList<Type>())) {
 							  throw new GenerateException("Parameter Error!\n",procedure_token);
 						  }
 					  }
 				  } else {
-					  if (!gc.globalProcedureMap.get(procedure_token.image).checkParameter(new ArrayList<Type>())) {
-						  throw new GenerateException("Parameter Error!\n",procedure_token);
+					  throw new GenerateException("Something Very Bad!\n");
+				  }
+				  return null;
+			  }
+		  }
+		  throw new GenerateException("Something Very Bad!\n");
+	  } else {
+		  ArrayList<Register> bakRegister=gc.registerManager.getAllUsed();
+		  for (int i=0;i<bakRegister.size();++i) {
+			  gc.code.append(String.format("push %s\n",bakRegister.get(i)));
+			  bakRegister.get(i).release();
+		  }		  
+		  String procedure_name="";
+		  if (children!=null && children.length>0) {
+			  if (children[0]!=null && children[0] instanceof ASTprocedure_identifier) {
+				  ASTprocedure_identifier api=(ASTprocedure_identifier)children[0];
+				  if (api.children!=null && api.children.length>0 && api.children[0]!=null && api.children[0] instanceof ASTidentifier) {
+					  Token procedure_token=((ASTidentifier)api.children[0]).getToken();
+					  if (gc.globalProcedureMap.containsKey(procedure_token.image)) {
+						  procedure_name=procedure_token.image;
+					  } else {
+						  throw new GenerateException(String.format("Don't have Procedure '%s'!", procedure_token.image),procedure_token);
 					  }
 				  }
-			  } else {
-				  throw new GenerateException("Something Very Bad!\n");
 			  }
-			  return null;
 		  }
+		  int pushSize=0;
+		  if (children!=null && children.length>1) {
+			  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
+				  ASTactual_parameter_list apl=(ASTactual_parameter_list)children[1];
+				  if (apl.children!=null) {
+					  pushSize=apl.children.length;
+					  for (int i=apl.children.length-1;i>=0;--i) { //reverse push
+						  if (apl.children[i]!=null && apl.children[i] instanceof ASTactual_parameter) {
+							  ASTactual_parameter ap=(ASTactual_parameter)apl.children[i];
+							  if (ap.children!=null && ap.children.length==1) {
+								  if (ap.children[0]!=null && ap.children[0] instanceof ASTvariable) {
+									  Register rg1=((ASTvariable)ap.children[0]).generateCode(gc);
+									  gc.code.append(String.format("push %s\n", rg1));
+									  rg1.release();
+									  continue;
+								  }
+								  if (ap.children[0]!=null && ap.children[0] instanceof ASTexpression) {
+									  Register rg1=((ASTexpression)ap.children[0]).generateCode(gc);
+									  gc.code.append(String.format("push %s\n", rg1));
+									  rg1.release();
+									  continue;
+								  }
+							  } else {
+								  throw new GenerateException("Something Very Bad!\n");
+							  }
+						  } else {
+							  throw new GenerateException("Something Very Bad!\n");
+						  }
+					  }
+				  } else {
+					  throw new GenerateException("Something Very Bad!\n");
+				  }
+			  }
+		  }
+		 if (!procedure_name.equals("")) 
+			 gc.code.append(String.format("call %s\n",procedure_name));
+		 else
+			 throw new GenerateException("Something Very Bad!\n");
+		  if (children!=null && children.length>1) {
+			  gc.code.append(String.format("add rsp,%d\n", pushSize*8));
+		  }
+			 
+
+		  
+		  
+		  for (int i=bakRegister.size()-1;i>=0;--i) {
+			  gc.code.append(String.format("pop %s\n",bakRegister.get(i)));
+			  bakRegister.get(i).acquire();
+		  }
+		  
+		  
 	  }
-	  throw new GenerateException("Something Very Bad!\n");
+	  return null;
   }
 
 }

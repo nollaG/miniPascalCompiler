@@ -42,19 +42,25 @@ class ASTAdditionNode extends SimpleNode {
 			  if (children[1]!=null && children[1] instanceof ASTaddition_operator) {
 				  String opt=((ASTaddition_operator)children[1]).getOpt();
 				  if ("+".equals(opt)) {
-					  gc.code.append(String.format("add [esp],%s\n",rg2));
-					  gc.code.append(String.format("pop %s\n",rg2));
-					  return rg2;
+					  rg1=gc.registerManager.getFreeRegister();
+					  gc.code.append(String.format("pop %s\n",rg1));
+					  gc.code.append(String.format("add %s,%s\n",rg1,rg2));
+					  rg2.release();
+					  return rg1;
 				  }
 				  if ("-".equals(opt)) {
-					  gc.code.append(String.format("sub [esp],%s\n",rg2));
-					  gc.code.append(String.format("pop %s\n",rg2));
-					  return rg2;
+					  rg1=gc.registerManager.getFreeRegister();
+					  gc.code.append(String.format("pop %s\n",rg1));
+					  gc.code.append(String.format("sub %s,%s\n",rg1,rg2));
+					  rg2.release();
+					  return rg1;
 				  }
 				  if ("or".equals(opt)) {
-					  gc.code.append(String.format("or [esp],%s\n",rg2));
-					  gc.code.append(String.format("pop %s\n",rg2));
-					  return rg2;
+					  rg1=gc.registerManager.getFreeRegister();
+					  gc.code.append(String.format("pop %s\n",rg1));
+					  gc.code.append(String.format("sub %s,%s\n",rg1,rg2));
+					  rg2.release();
+					  return rg1;
 				  }
 				  throw new GenerateException("Something Very Bad!\n");
 			  } else {
