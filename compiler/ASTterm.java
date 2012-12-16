@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -17,8 +18,20 @@ class ASTterm extends SimpleNode {
   }
   
   
-  public Object generateCode(GeneratorContext gc) throws GenerateException{
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{
+	  getType(gc);
+	  if (gc.generate) {
+		  if (children!=null && children.length==1) {
+			  if (children[0]!=null && children[0] instanceof ASTfactor) {
+				  return ((ASTfactor)children[0]).generateCode(gc);
+			  }
+			  if (children[0]!=null && children[0] instanceof ASTMultiplicationNode) {
+				  return ((ASTMultiplicationNode)children[0]).generateCode(gc);
+			  }
+			  throw new GenerateException("Something Very Bad!\n");
+		  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length==1) {

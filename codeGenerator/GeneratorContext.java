@@ -14,6 +14,13 @@ public class GeneratorContext {
 	public HashMap<String,Procedure> globalProcedureMap;
 	public Procedure currentProcedureOrFunction;
 	
+	public LabelManager labelManager;
+	
+	public RegisterManager registerManager;
+	
+	public boolean generate=false;
+	
+	public boolean haveWriteTextSegment=false;
 	private void Reset() 
 	{
 		code=new StringBuilder();
@@ -22,6 +29,9 @@ public class GeneratorContext {
 		globalFunctionMap.clear();
 		globalProcedureMap.clear();
 		currentProcedureOrFunction=null;
+		haveWriteTextSegment=false;
+		registerManager.clear();
+		labelManager.clear();
 		
 		globalTypeMap.put("integer", new IntegerType());
 		globalTypeMap.put("char", new CharType());
@@ -34,6 +44,8 @@ public class GeneratorContext {
 		globalTypeMap=new HashMap<String,Type>();
 		globalFunctionMap=new HashMap<String,Function>();
 		globalProcedureMap=new HashMap<String,Procedure>();
+		registerManager = new RegisterManager();
+		labelManager = new LabelManager();
 		
 		Reset();
 	}
@@ -69,5 +81,35 @@ public class GeneratorContext {
 				return globalVariableList.get(i);
 		}
 		return null;
+	}
+	public Register moveVariablePointerToReg(String t) throws GenerateException { //return reg,ensure t exists
+		System.out.println(String.format("VariableName=%s\n",t));
+		Register dstRegister=registerManager.getFreeRegister();
+		if (currentProcedureOrFunction!=null) {
+			for (int i=0;i<currentProcedureOrFunction.localvariable_list.size();++i) {
+				if (currentProcedureOrFunction.localvariable_list.get(i).name.equals(t)) {
+					code.append(String.format("lea %s,[rbp-%d]\n",dstRegister.toString(),currentProcedureOrFunction.localvariable_list.get(i).offset*8));
+					return dstRegister;
+				}
+			}
+			for (int i=0;i<currentProcedureOrFunction.parameter_list.size();++i) {
+				if (currentProcedureOrFunction.parameter_list.get(i).name.equals(t)) {
+					if (currentProcedureOrFunction.parameter_list.get(i).isVar) {
+						code.append(String.format("lea %s,[rbp+%d]\n",dstRegister.toString(),currentProcedureOrFunction.parameter_list.get(i).offset*8));
+						code.append(String.format("mov %s,[%s]", dstRegister,dstRegister));
+					}else {
+						code.append(String.format("lea %s,[rbp+%d]\n",dstRegister.toString(),currentProcedureOrFunction.parameter_list.get(i).offset*8));
+					}
+					return dstRegister;
+				}
+			}
+		}
+		for (int i=0;i<globalVariableList.size();++i) {
+			if (globalVariableList.get(i).name.equals(t)) {
+				code.append(String.format("mov %s,%s\n",dstRegister.toString(),t));
+				return dstRegister;
+			}
+		}
+		throw new GenerateException("Ask for some undefined variable!\n");
 	}
 }

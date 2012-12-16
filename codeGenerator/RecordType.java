@@ -10,10 +10,13 @@ public class RecordType extends Type {
 		componentList=new ArrayList<Component>();
 	}
 	public boolean addComponent(Component t) {
+		int tot=0;
 		for (int i=0;i<componentList.size();++i) {
 			if (componentList.get(i).name.equals(t.name))
 				return false;
+			tot+=componentList.get(i).type.getTypeSize();
 		}
+		t.offset=tot;
 		componentList.add(t);
 		return true;
 	}

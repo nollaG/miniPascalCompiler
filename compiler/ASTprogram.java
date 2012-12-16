@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTprogram extends SimpleNode {
   public ASTprogram(int id) {
@@ -11,6 +14,21 @@ class ASTprogram extends SimpleNode {
   public ASTprogram(Pascal p, int id) {
     super(p, id);
   }
-
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  gc.code.append("format elf64 executable 3\n");
+		  gc.code.append("entry _main\n");
+		  gc.code.append("\n");
+	  }
+	  this.simpleGenerate(gc);
+	  if (gc.generate) {
+		  gc.code.append("mov rbx,0   ;exit(0)\n");//exit code
+		  gc.code.append("mov rax,1\n");
+		  gc.code.append("int 0x80\n");
+	  }
+	  return null;
+  }
+  
 }
 /* JavaCC - OriginalChecksum=ca6455d4696d326920d451f28de92b15 (do not edit this line) */

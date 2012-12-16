@@ -28,15 +28,22 @@ public class Procedure {
 		return true;
 	}
 	public boolean addLocalVariable(Component t) {
-		int toffset=0;
+		int toffset=t.type.getTypeSize();
 		for (int i=0;i<localvariable_list.size();++i) {
 			if (localvariable_list.get(i).name.equals(t.name))
 				return false;
 			toffset+=localvariable_list.get(i).type.getTypeSize();
 		}
-		t.offset=-toffset;
+		t.offset=toffset;
 		localvariable_list.add(t);
 		return true;
+	}
+	public int getTotalStackSize() {
+		int total=0;
+		for (int i=0;i<localvariable_list.size();++i) {
+			total+=localvariable_list.get(i).type.getTypeSize();
+		}
+		return total;
 	}
 	protected String parameterlistToString() {
 		String tmp="";

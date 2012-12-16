@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 import codeGenerator.IntegerType;
 import codeGenerator.Variable;
@@ -20,8 +21,74 @@ class ASTvariable extends SimpleNode {
     super(p, id);
   }
 
-  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{ //move variable pointer to Register returned
+	  getType(gc);//check
+	  Type currentType=null;
+	  if (gc.generate) {
+		  Register dstRegister=null;
+		  for (int i=0;i<children.length;++i) {
+			  if (children[i]!=null && children[i] instanceof ASTidentifier) {
+				  dstRegister = gc.moveVariablePointerToReg(((ASTidentifier)children[i]).getName());
+				  Variable tv =gc.getComponent(((ASTidentifier)children[i]).getName());
+				  currentType=tv.type;
+			  }
+			  //TODO:
+			  if (children[i]!=null && children[i] instanceof ASTindexed_suffix) {
+				  ASTindexed_suffix ais=(ASTindexed_suffix)children[i];
+				  if (ais.children!=null && ais.children[0]!=null && ais.children[0] instanceof ASTexpression_list) {
+					  ASTexpression_list ael=(ASTexpression_list)ais.children[0];
+					  if (ael.children!=null) {
+						  for (int j=0;j<ael.children.length;++j) {
+							  if (((ASTexpression)ael.children[j]).getType(gc) instanceof IntegerType) {
+								  if (currentType instanceof ArrayType) {
+									  int low=((ArrayType) currentType).low;
+									  currentType=((ArrayType)currentType).elementType;
+									  Register rg2=((ASTexpression)ael.children[j]).generateCode(gc);
+									  gc.code.append(String.format("sub %s,%d\n",rg2,low));
+									  gc.code.append(String.format("lea %s,[%s+%s*%d]\n",dstRegister,dstRegister,rg2,currentType.getTypeSize()*8));
+									  rg2.release();
+								  } else {
+									  throw new GenerateException("Invalid Array reference!",((ASTexpression)ael.children[j]).currentToken);
+								  }
+							  } else {
+								  throw new GenerateException("index expression must be Integer!",((ASTexpression)ael.children[j]).currentToken);
+							  }
+						  }
+					  }
+
+				  } else {
+					  throw new GenerateException("Something Very Bad!\n");
+				  }
+			  }
+			  
+			  
+			  if (children[i]!=null && children[i] instanceof ASTcomponent_suffix) {
+				  Token t=((ASTidentifier)((ASTfield_identifier)((ASTcomponent_suffix)children[i]).children[0]).children[0]).getToken();
+				  if (currentType instanceof RecordType) {
+					  RecordType rt=(RecordType)currentType;
+					  boolean flag=false;
+					  for (int j=0;j<rt.componentList.size();++j) {
+						  if (rt.componentList.get(j).name.equals(t.image)) {
+							  gc.code.append(String.format("lea %s,[%s+%d]\n",dstRegister,dstRegister,rt.componentList.get(j).offset));
+							  currentType=rt.componentList.get(j).type;
+							  flag=true;
+							  break;
+						  }
+					  }
+					  if (!flag) {
+						  throw new GenerateException("Invalid Record reference!",t);
+					  }
+				  } else {
+					  throw new GenerateException("Invalid Record reference!",t);
+				  }
+			  }
+
+		  }
+		  if (dstRegister==null)
+			  throw new GenerateException("Something very bad!\n");
+		  return dstRegister;
+	  }
+	  return null;
   }
   public Type getType(GeneratorContext gc) throws GenerateException {
 	  Type currentType=null;

@@ -24,6 +24,9 @@ class ASTaddition_operator extends SimpleNode {
   public void setOpt(String o) {
 	  opt=o;
   }
+  public String getOpt() {
+	  return opt;
+  }
   public String toString() { return "additional_operator \"" + opt +"\"";}
 
 }

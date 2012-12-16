@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -16,8 +17,25 @@ class ASTfactor extends SimpleNode {
     super(p, id);
   }
 
-  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  getType(gc);
+	  if (gc.generate) {
+		  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTexpression) {
+			  return ((ASTexpression)children[0]).generateCode(gc);
+		  }
+		  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTfunction_designator) {
+			  return ((ASTfunction_designator)children[0]).generateCode(gc); //TODO
+		  }
+		  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTvariable) {
+			  Register rg=((ASTvariable)children[0]).generateCode(gc);
+			  gc.code.append(String.format("mov %s,[%s]\n",rg,rg));
+			  return rg;
+		  }
+		  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTnumber) {
+			  return ((ASTnumber)children[0]).generateCode(gc);
+		  }
+	  }
+	  throw new GenerateException("Something Very Bad!\n");
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTexpression) {

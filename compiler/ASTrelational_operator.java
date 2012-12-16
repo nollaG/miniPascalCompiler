@@ -15,6 +15,9 @@ class ASTrelational_operator extends SimpleNode {
   public void setOpt(String o) {
 	  opt=o;
   }
+  public String getOpt() {
+	  return opt;
+  }
   public String toString() { return "relational_operator \"" + opt+"\"";}
 }
 /* JavaCC - OriginalChecksum=420e23125a0f136b1cdaa6a5d264a65c (do not edit this line) */

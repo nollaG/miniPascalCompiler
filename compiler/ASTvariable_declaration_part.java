@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTvariable_declaration_part extends SimpleNode {
   public ASTvariable_declaration_part(int id) {
@@ -12,5 +15,19 @@ class ASTvariable_declaration_part extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  if (gc.currentProcedureOrFunction==null) {
+			  gc.code.append("segment readable writeable\n");
+		  }
+	  }
+	  simpleGenerate(gc);
+	  if (gc.generate) {
+		  if (gc.currentProcedureOrFunction==null) {
+			  gc.code.append("\n");
+		  }
+	  }
+	  return null;
+  }
 }
 /* JavaCC - OriginalChecksum=26f3695916783b3a4082f48c32d94a11 (do not edit this line) */

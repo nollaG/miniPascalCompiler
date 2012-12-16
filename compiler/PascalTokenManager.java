@@ -920,7 +920,7 @@ public Token getNextToken()
    {
       jjmatchedKind = 0;
       matchedToken = jjFillToken();
-   currentToken=matchedToken;
+      currentToken=matchedToken;
       return matchedToken;
    }
 
@@ -939,7 +939,7 @@ public Token getNextToken()
       if ((jjtoToken[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
       {
          matchedToken = jjFillToken();
-   currentToken=matchedToken;
+      currentToken=matchedToken;
          return matchedToken;
       }
       else
@@ -997,4 +997,5 @@ private void jjCheckNAddStates(int start, int end)
    } while (start++ != end);
 }
 public static Token currentToken;
+
 }

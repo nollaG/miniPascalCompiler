@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.Component;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
 import codeGenerator.Function;
@@ -32,6 +33,7 @@ class ASTfunction_heading extends SimpleNode {
 				  }
 				  if (children[i]!=null && children[i] instanceof ASTresult_type) {
 					  ((Function)gc.currentProcedureOrFunction).resultType=(Type)((ASTresult_type)children[i]).generateCode(gc);
+					  gc.currentProcedureOrFunction.addLocalVariable(new Component(gc.currentProcedureOrFunction.name,((Function)gc.currentProcedureOrFunction).resultType));
 				  }
 			  }
 			  return null;

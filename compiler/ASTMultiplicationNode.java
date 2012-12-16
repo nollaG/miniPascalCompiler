@@ -8,6 +8,7 @@ import codeGenerator.GeneratorContext;
 import codeGenerator.IntegerType;
 import codeGenerator.RealType;
 import codeGenerator.RecordType;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -19,8 +20,31 @@ class ASTMultiplicationNode extends SimpleNode {
   public ASTMultiplicationNode(Pascal p, int id) {
     super(p, id);
   }
-  public Object generateCode(GeneratorContext gc) throws GenerateException{
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{
+	  getType(gc);
+	  if (gc.generate) {
+		  if (children!=null && children.length==3) {
+			  Register rg1=null,rg2=null;
+			  if (children[0]!=null && children[0] instanceof ASTMultiplicationNode) {
+				  rg1=((ASTMultiplicationNode)children[0]).generateCode(gc);
+				  gc.code.append(String.format("push %s\n",rg1));
+				  rg1.release();
+			  }
+			  if (children[0]!=null && children[0] instanceof ASTfactor) {
+				  rg1=((ASTfactor)children[0]).generateCode(gc);
+				  gc.code.append(String.format("push %s\n",rg1));
+				  rg1.release();
+			  }
+			  if (children[2]!=null && children[2] instanceof ASTfactor) {
+				  rg2=((ASTfactor)children[2]).generateCode(gc);
+			  }
+			  //TODO:Complete multi,cal between [esp] and rg2
+			  gc.code.append(String.format("pop %s\n",rg2));
+			  return rg2;
+		  }
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  return null;
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length==3) {

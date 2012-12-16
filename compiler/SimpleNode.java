@@ -71,7 +71,7 @@ class SimpleNode implements Node {
   /* Override this method if you want to customize how the node dumps
      out its children. */
   
-  public Object generateCode(GeneratorContext gc) throws GenerateException {
+  public Object generateCode(GeneratorContext gc) throws GenerateException { //type checking actually
 	  if (children!=null && children.length==1) {
 		  if (children[0]!=null)
 			  return ((SimpleNode)children[0]).generateCode(gc);
@@ -80,6 +80,7 @@ class SimpleNode implements Node {
 	  }
 	  return null;
   }
+  
   
   protected void simpleGenerate(GeneratorContext gc) throws GenerateException{
 	  if (children!=null) {
@@ -91,6 +92,7 @@ class SimpleNode implements Node {
 		  }
 	  }
   }
+  
 
   public void dump(String prefix) {
 	  System.out.println(toString(prefix));

@@ -6,8 +6,10 @@ import codeGenerator.ArrayType;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
 import codeGenerator.IntegerType;
+import codeGenerator.Label;
 import codeGenerator.RealType;
 import codeGenerator.RecordType;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -19,8 +21,105 @@ class ASTexpression extends SimpleNode {
   public ASTexpression(Pascal p, int id) {
     super(p, id);
   }
-  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  getType(gc);
+	  if (gc.generate) {
+		  if (children!=null && children.length==1) {
+			  if (children[0]!=null && children[0] instanceof ASTsimple_expression) {
+				  return ((ASTsimple_expression)children[0]).generateCode(gc);
+			  }
+			  throw new GenerateException("Something Very Bad!\n");
+		  }
+		  if (children!=null && children.length==3) {
+			  Register rg1=null,rg2=null;
+			  if (children[0]!=null && children[0] instanceof ASTsimple_expression) {
+				  rg1=((ASTsimple_expression)children[0]).generateCode(gc);
+				  gc.code.append(String.format("push %s\n", rg1));
+				  rg1.release();
+			  }
+			  if (children[2]!=null && children[2] instanceof ASTsimple_expression) {
+				  rg2=((ASTsimple_expression)children[2]).generateCode(gc);
+			  }
+			  if (children[1]!=null && children[1] instanceof ASTrelational_operator) {
+				  rg1=gc.registerManager.getFreeRegister();
+				  gc.code.append(String.format("pop %s\n", rg1));
+				  String opt=((ASTrelational_operator)children[1]).getOpt();
+				  if ("=".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("je %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+				  if ("<>".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("jne %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+				  if ("<".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("jl %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+				  if ("<=".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("jle %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+				  if (">".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("jg %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+				  if (">=".equals(opt)) {
+					  gc.code.append(String.format("cmp %s,%s\n", rg1,rg2));
+					  Label l1=gc.labelManager.getNewLabel();
+					  Label l2=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("jge %s\n", l1));
+					  gc.code.append(String.format("mov %s,0\n",rg1));
+					  gc.code.append(String.format("jmp %s\n", l2));
+					  gc.code.append(String.format("%s: mov %s,1\n", l1,rg1));
+					  gc.code.append(String.format("%s: ", l2));
+					  rg2.release();
+					  return rg1;
+				  }
+			  }
+		  }
+	  }
+	  return null;
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length==1) {

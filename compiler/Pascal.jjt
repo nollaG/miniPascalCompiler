@@ -350,7 +350,7 @@ void case_limb():
 void case_label_list():
 {}
 {
-    constant() ( < COMMA > constant() )*
+    integer_number() ( < COMMA > integer_number() )*
 }
 
 

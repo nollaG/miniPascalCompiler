@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASTstatement_part extends SimpleNode {
   public ASTstatement_part(int id) {
@@ -12,5 +15,33 @@ class ASTstatement_part extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  if (gc.currentProcedureOrFunction==null) {
+			  if (!gc.haveWriteTextSegment) {
+				  gc.code.append("segment readable executable\n");
+				  gc.haveWriteTextSegment=true;
+			  }
+			  gc.code.append("_main:\n");
+		  } else {
+			  if (!gc.haveWriteTextSegment) {
+				  gc.code.append("segment readable executable\n");
+				  gc.haveWriteTextSegment=true;
+			  }
+			  gc.code.append(String.format("%s:\n",gc.currentProcedureOrFunction.name));
+			  gc.code.append("push rbp\n");
+			  gc.code.append("mov rbp,rsp\n");
+			  gc.code.append(String.format("sub rsp,%d\n",gc.currentProcedureOrFunction.getTotalStackSize()*8));
+		  }
+	  }
+	  simpleGenerate(gc);
+	  if (gc.generate) {
+		  if (gc.currentProcedureOrFunction!=null) {
+			  gc.code.append("mov rsp,rbp\n");
+			  gc.code.append("pop rbp\n");
+		  }
+	  }
+	  return null;
+  }
 }
 /* JavaCC - OriginalChecksum=10cb6084817fb3d67669359a0a56c5f4 (do not edit this line) */

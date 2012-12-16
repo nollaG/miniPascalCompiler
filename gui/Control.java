@@ -127,4 +127,7 @@ public class Control {
 	public void pressTypeCheckingButton() {
 		console.setText(PascalCompiler.typeChecking());
 	}
+	public void pressAsmGenerateButton() {
+		console.setText(PascalCompiler.codeGenerate());
+	}
 }

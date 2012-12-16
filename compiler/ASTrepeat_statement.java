@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Label;
+import codeGenerator.Register;
+
 public
 class ASTrepeat_statement extends SimpleNode {
   public ASTrepeat_statement(int id) {
@@ -11,6 +16,26 @@ class ASTrepeat_statement extends SimpleNode {
   public ASTrepeat_statement(Pascal p, int id) {
     super(p, id);
   }
-
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  if (children!=null && children.length==2)
+			  if (children[0]!=null && children[0] instanceof ASTstatement_sequence)
+				  if (children[1]!=null && children[1] instanceof ASTexpression) {
+					  gc.code.append("\n");
+					  Label beginLabel=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("%s: ",beginLabel));
+					  ((ASTstatement_sequence)children[0]).generateCode(gc);
+					  Register rg1=((ASTexpression)children[1]).generateCode(gc);
+					  gc.code.append(String.format("cmp %s,0\n",rg1));
+					  rg1.release();
+					  gc.code.append(String.format("jne %s\n", beginLabel));
+				  } else {
+					  throw new GenerateException("Something Very Bad!\n");
+				  }
+	  } else {
+		  simpleGenerate(gc);
+	  }
+	  return null;
+  }
 }
 /* JavaCC - OriginalChecksum=92966b7678e3c34de9847b614d174312 (do not edit this line) */

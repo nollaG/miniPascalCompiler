@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Label;
+import codeGenerator.Register;
+
 public
 class ASTwhile_statement extends SimpleNode {
   public ASTwhile_statement(int id) {
@@ -10,6 +15,32 @@ class ASTwhile_statement extends SimpleNode {
 
   public ASTwhile_statement(Pascal p, int id) {
     super(p, id);
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  if (children!=null && children.length==2) {
+			  if (children[0]!=null && children[0] instanceof ASTexpression) {
+				  if (children[1]!=null && children[1] instanceof ASTstatement) {
+					  Register rg1=((ASTexpression)children[0]).generateCode(gc);
+					  gc.code.append(String.format("cmp %s,0\n",rg1));
+					  rg1.release();
+					  Label endwhile=gc.labelManager.getNewLabel();
+					  Label whileLabel=gc.labelManager.getNewLabel();
+					  gc.code.append(String.format("je %s\n", endwhile));
+					  gc.code.append(String.format("%s: ", whileLabel));
+					  ((ASTstatement)children[1]).generateCode(gc);
+					  rg1=((ASTexpression)children[0]).generateCode(gc);
+					  gc.code.append(String.format("cmp %s,0\n",rg1));
+					  rg1.release();
+					  gc.code.append(String.format("jne %s\n", whileLabel));
+					  gc.code.append(String.format("%s: ", endwhile));
+				  }
+			  }
+		  }
+	  }else {
+		  simpleGenerate(gc);
+	  }
+	  return null;
   }
 
 }

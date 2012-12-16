@@ -50,6 +50,8 @@ class ASTvariable_declaration extends SimpleNode {
 							  if (ail.children[i]!=null && ail.children[i] instanceof ASTidentifier) {
 								  ASTidentifier tmp=(ASTidentifier)ail.children[i];
 								  Variable tc=new Variable(tmp.getName(),type);
+								  if (gc.generate)
+									  gc.code.append(String.format("%s dq %d\n", tc.name,type.getTypeSize()));
 								  if (!gc.addGlobalVariable(tc)) {
 									  throw new GenerateException(String.format("Duplicate definition of variable '%s'!\nLine %d,Column %d",
 											  tmp.getName(),tmp.getToken().beginLine,tmp.getToken().beginColumn));

@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
+import codeGenerator.Type;
+
 public
 class ASTassignment_statement extends SimpleNode {
   public ASTassignment_statement(int id) {
@@ -10,6 +15,31 @@ class ASTassignment_statement extends SimpleNode {
 
   public ASTassignment_statement(Pascal p, int id) {
     super(p, id);
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  if (children!=null && children.length==2) {
+		  Type type1=((ASTexpression)children[1]).getType(gc);
+		  Type type2=((ASTvariable)children[0]).getType(gc);
+		  if (type1!=type2) {
+			  throw new GenerateException("Type does not match!",((ASTexpression)children[1]).currentToken);
+		  }
+		  if (gc.generate) {
+			  Register rg1=((ASTvariable)children[0]).generateCode(gc);
+			  gc.code.append(String.format("push %s\n",rg1));
+			  rg1.release();
+			  Register rg2=((ASTexpression)children[1]).generateCode(gc);
+			  rg1=gc.registerManager.getFreeRegister();
+			  gc.code.append(String.format("pop %s\n",rg1));
+			  gc.code.append(String.format("mov [%s],%s\n",rg1,rg2));
+			  rg1.release();
+			  rg2.release();
+		  } else {
+			  simpleGenerate(gc);
+		  }
+	  } else {
+		  throw new GenerateException("Something Very Wrong!\n");
+	  }
+	  return null;
   }
 
 }

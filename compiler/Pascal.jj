@@ -1355,7 +1355,7 @@ void case_label_list():
 {/*@bgen(jjtree) case_label_list */
     try {
 /*@egen*/
-    constant() ( < COMMA > constant() )*/*@bgen(jjtree)*/
+    integer_number() ( < COMMA > integer_number() )*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);

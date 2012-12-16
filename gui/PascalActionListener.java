@@ -45,6 +45,9 @@ public class PascalActionListener implements ActionListener{
 		if ("parCheck".equals(command)) {
 			control.pressTypeCheckingButton();
 		}
+		if ("asmGenerate".equals(command)) {
+			control.pressAsmGenerateButton();
+		}
 	}
 
 }

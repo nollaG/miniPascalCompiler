@@ -16,6 +16,10 @@ class ASTinteger_number extends SimpleNode {
 	  num=n;
   }
   
+  public int getNum() {
+	  return Integer.parseInt(num);
+  }
+  
   public String toString() { return "<Integer>: "+num; }
 }
 /* JavaCC - OriginalChecksum=2f9e29af78f1d0fa1ccd6e8cd4fee6b1 (do not edit this line) */

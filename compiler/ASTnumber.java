@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -14,6 +15,24 @@ class ASTnumber extends SimpleNode {
 
   public ASTnumber(Pascal p, int id) {
     super(p, id);
+  }
+  
+  
+  public Register generateCode(GeneratorContext gc) throws GenerateException{
+	  getType(gc);
+	  if (gc.generate) {
+		  if (children!=null && children.length==1) {
+			  Register dst=gc.registerManager.getFreeRegister();
+			  if (children[0]!=null && children[0] instanceof ASTinteger_number) {
+				  gc.code.append(String.format("mov %s,%d\n",dst.toString(),((ASTinteger_number)children[0]).getNum()));
+			  }
+			  if (children[0]!=null && children[0] instanceof ASTreal_number) {
+				  gc.code.append(String.format("mov %s,%f\n",dst.toString(),((ASTreal_number)children[0]).getNum()));
+			  }
+			  return dst;
+		  }
+	  }
+	  return null;
   }
   
   public Type getType(GeneratorContext gc) throws GenerateException{

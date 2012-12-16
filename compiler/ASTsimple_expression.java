@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -16,8 +17,28 @@ class ASTsimple_expression extends SimpleNode {
     super(p, id);
   }
 
-  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+	  getType(gc);
+	  if (gc.generate) {
+		  Register rg=null;
+		  if (children!=null && children.length>0) {
+			  if (children[children.length-1]!=null && children[children.length-1] instanceof ASTterm) {
+				  rg=((ASTterm)children[children.length-1]).generateCode(gc);
+			  }
+			  if (children[children.length-1]!=null && children[children.length-1] instanceof ASTAdditionNode) {
+				  rg=((ASTAdditionNode)children[children.length-1]).generateCode(gc);
+			  }
+			  if (children!=null && children[0]!=null && children[0] instanceof ASTsign) {
+				  if (((ASTsign)children[0]).getSign().equals("-")) {
+					  gc.code.append(String.format("not %s\n",rg.toString()));
+					  gc.code.append(String.format("add %s,1\n",rg.toString()));
+				  }
+			  }
+			  return rg;
+		  }
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  return null;
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length>0) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -18,7 +19,7 @@ class ASTfunction_designator extends SimpleNode {
     super(p, id);
   }
   
-  public Object generateCode(GeneratorContext gc) throws GenerateException{//return variable type
+  public Register generateCode(GeneratorContext gc) throws GenerateException{//return variable type
 	  if (children!=null && children.length>0) {
 		  if (children[0]!=null && children[0] instanceof ASTidentifier) {
 			  Token functionToken=((ASTidentifier)children[0]).getToken();
@@ -39,6 +40,7 @@ class ASTfunction_designator extends SimpleNode {
 					  throw new GenerateException("Parameter Error!\n",functionToken);
 				  }
 			  }
+			  return gc.registerManager.getRegisterByName("rax");
 			  } else {
 				  throw new GenerateException("Something Very Bad!\n");
 			  }

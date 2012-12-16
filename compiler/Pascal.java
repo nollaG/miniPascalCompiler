@@ -1399,7 +1399,7 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      constant();
+      integer_number();
       label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1411,7 +1411,7 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
           break label_6;
         }
         jj_consume_token(COMMA);
-        constant();
+        integer_number();
       }
     } catch (Throwable jjte000) {
       if (jjtc000) {

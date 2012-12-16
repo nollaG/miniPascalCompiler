@@ -8,6 +8,7 @@ import codeGenerator.GeneratorContext;
 import codeGenerator.IntegerType;
 import codeGenerator.RealType;
 import codeGenerator.RecordType;
+import codeGenerator.Register;
 import codeGenerator.Type;
 
 public
@@ -20,8 +21,48 @@ class ASTAdditionNode extends SimpleNode {
     super(p, id);
   }
 
-  public Object generateCode(GeneratorContext gc) throws GenerateException{
-	  return getType(gc);
+  public Register generateCode(GeneratorContext gc) throws GenerateException{
+	  getType(gc);
+	  if (gc.generate) {
+		  Register rg1=null,rg2=null;
+		  if (children!=null && children.length==3) {
+			  if (children[0]!=null && children[0] instanceof ASTAdditionNode) {
+				  rg1=((ASTAdditionNode)children[0]).generateCode(gc);
+				  gc.code.append(String.format("push %s\n",rg1));
+				  rg1.release();
+			  }
+			  if (children[0]!=null && children[0] instanceof ASTterm) {
+				  rg1=((ASTterm)children[0]).generateCode(gc);
+				  gc.code.append(String.format("push %s\n",rg1));
+				  rg1.release();
+			  }
+			  if (children[2]!=null && children[2] instanceof ASTterm) {
+				  rg2=((ASTterm)children[2]).generateCode(gc);
+			  }
+			  if (children[1]!=null && children[1] instanceof ASTaddition_operator) {
+				  String opt=((ASTaddition_operator)children[1]).getOpt();
+				  if ("+".equals(opt)) {
+					  gc.code.append(String.format("add [esp],%s\n",rg2));
+					  gc.code.append(String.format("pop %s\n",rg2));
+					  return rg2;
+				  }
+				  if ("-".equals(opt)) {
+					  gc.code.append(String.format("sub [esp],%s\n",rg2));
+					  gc.code.append(String.format("pop %s\n",rg2));
+					  return rg2;
+				  }
+				  if ("or".equals(opt)) {
+					  gc.code.append(String.format("or [esp],%s\n",rg2));
+					  gc.code.append(String.format("pop %s\n",rg2));
+					  return rg2;
+				  }
+				  throw new GenerateException("Something Very Bad!\n");
+			  } else {
+				  throw new GenerateException("Something Very Bad!\n");
+			  }
+		  }
+	  }
+	  return null;
   }
   public Type getType(GeneratorContext gc) throws GenerateException{
 	  if (children!=null && children.length==3) {

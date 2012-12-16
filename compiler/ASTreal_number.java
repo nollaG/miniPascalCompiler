@@ -15,6 +15,9 @@ class ASTreal_number extends SimpleNode {
   public void setNum(String n) {
 	  num=n;
   }
+  public float getNum() {
+	  return Float.parseFloat(num);
+  }
   
   public String toString() { return "<Real>: "+num; }
 }
