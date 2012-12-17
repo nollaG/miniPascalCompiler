@@ -80,14 +80,6 @@ public class PascalCompiler {
 		try {
 			GeneratorContext gc=new GeneratorContext();
 			prevASTProgram.generateCode(gc);
-			Iterator<Function> itf=gc.globalFunctionMap.values().iterator();
-			while (itf.hasNext()) {
-				System.out.println(itf.next().toString());
-			}
-			Iterator<Procedure> itp=gc.globalProcedureMap.values().iterator();
-			while (itp.hasNext()) {
-				System.out.println(itp.next().toString());
-			}
 			return "Type Checking Success!\nNo Error Detected.\n";
 		}catch(GenerateException e) {
 //			e.printStackTrace();
