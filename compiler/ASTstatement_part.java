@@ -2,8 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.Function;
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
 
 public
 class ASTstatement_part extends SimpleNode {
@@ -37,6 +39,11 @@ class ASTstatement_part extends SimpleNode {
 	  simpleGenerate(gc);
 	  if (gc.generate) {
 		  if (gc.currentProcedureOrFunction!=null) {
+			  if (gc.currentProcedureOrFunction instanceof Function) {
+				  Register res=gc.moveVariablePointerToReg(gc.currentProcedureOrFunction.name);
+				  gc.code.append(String.format("mov rax,[%s]\n",res));
+				  res.release();
+			  }
 			  gc.code.append("mov rsp,rbp\n");
 			  gc.code.append("pop rbp\n");
 			  gc.code.append("ret\n");

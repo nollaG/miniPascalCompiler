@@ -2,6 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Register;
+import codeGenerator.Type;
+
 public
 class ASTinput_variable extends SimpleNode {
   public ASTinput_variable(int id) {
@@ -12,5 +17,35 @@ class ASTinput_variable extends SimpleNode {
     super(p, id);
   }
 
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTvariable) {
+		  if (gc.generate) {
+			  Type vt=((ASTvariable)children[0]).getType(gc);
+			  if (vt!=gc.globalTypeMap.get("integer")) {
+				  throw new GenerateException("Read Type must be integer!\n",((ASTvariable)children[0]).currentToken);
+			  }
+			  gc.code.append("mov rax,3   ;read\n");
+			  gc.code.append("mov rbx,0   ;stdin\n");
+			  gc.code.append(String.format("mov rcx,%s\n",gc.getIOBuf()));
+			  gc.code.append("mov rdx,1   ;len\n");
+			  gc.code.append("int 0x80    ;syscall\n");
+			  Register rg=gc.registerManager.getFreeRegister();
+			  gc.code.append(String.format("mov %s,[%s]\n",rg.getLowByte(),gc.getIOBuf()));
+			  gc.code.append(String.format("push %s\n", rg));
+			  rg.release();
+			  Register dst=((ASTvariable)children[0]).generateCode(gc);
+			  rg=gc.registerManager.getFreeRegister();
+			  gc.code.append(String.format("pop %s\n", rg));
+			  gc.code.append(String.format("mov [%s],%s\n",dst,rg));
+			  rg.release();
+			  dst.release();
+		  } else {
+			  simpleGenerate(gc);
+		  }
+	  } else {
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  return null;
+  }
 }
 /* JavaCC - OriginalChecksum=e321ae7dfbd9c28fd7c48850d32dc443 (do not edit this line) */

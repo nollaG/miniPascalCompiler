@@ -1142,9 +1142,9 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
 
   final public void for_statement() throws ParseException {
  /*@bgen(jjtree) for_statement */
-  ASTfor_statement jjtn000 = new ASTfor_statement(JJTFOR_STATEMENT);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+ ASTfor_statement jjtn000 = new ASTfor_statement(JJTFOR_STATEMENT);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);Token t;
     try {
       jj_consume_token(FOR);
       variable_identifier();
@@ -1152,10 +1152,10 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
       initial_expression();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case TO:
-        jj_consume_token(TO);
+        t = jj_consume_token(TO);
         break;
       case DOWNTO:
-        jj_consume_token(DOWNTO);
+        t = jj_consume_token(DOWNTO);
         break;
       default:
         jj_la1[18] = jj_gen;
@@ -1165,24 +1165,27 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
       final_expression();
       jj_consume_token(DO);
       statement();
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+    jjtn000.setOpt(t.image);
     } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
-      }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
-      }
-      {if (true) throw (Error)jjte000;}
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
     }
   }
 
@@ -3116,31 +3119,6 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
     finally { jj_save(2, xla); }
   }
 
-  private boolean jj_3R_22() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_21() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_22()) {
-    jj_scanpos = xsp;
-    if (jj_3R_23()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_25() {
-    if (jj_scan_token(DOT)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_20() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   private boolean jj_3R_23() {
     if (jj_3R_25()) return true;
     return false;
@@ -3181,6 +3159,31 @@ public class Pascal/*@bgen(jjtree)*/implements PascalTreeConstants, PascalConsta
   private boolean jj_3R_17() {
     if (jj_3R_18()) return true;
     if (jj_scan_token(COLON_EQUALS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_22() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_21() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_23()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_25() {
+    if (jj_scan_token(DOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_20() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 

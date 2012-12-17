@@ -33,6 +33,9 @@ class ASTfunction_heading extends SimpleNode {
 				  }
 				  if (children[i]!=null && children[i] instanceof ASTresult_type) {
 					  ((Function)gc.currentProcedureOrFunction).resultType=(Type)((ASTresult_type)children[i]).generateCode(gc);
+					  if (((Function)gc.currentProcedureOrFunction).resultType.getTypeSize()!=1) {
+						  throw new GenerateException("Function can only return type which size equal to integer!",((ASTresult_type)children[i]).currentToken);
+					  }
 					  gc.currentProcedureOrFunction.addLocalVariable(new Component(gc.currentProcedureOrFunction.name,((Function)gc.currentProcedureOrFunction).resultType));
 				  }
 			  }

@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+
 public
 class ASToutput_statement extends SimpleNode {
   public ASToutput_statement(int id) {
@@ -10,6 +13,26 @@ class ASToutput_statement extends SimpleNode {
 
   public ASToutput_statement(Pascal p, int id) {
     super(p, id);
+  }
+  
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (gc.generate) {
+		  if (children!=null && children.length==1 && children[0] instanceof ASToutput_list) {
+			  ASToutput_list aol=(ASToutput_list)children[0];
+			  gc.code.append("push rax\n");
+			  gc.code.append("push rbx\n");
+			  gc.code.append("push rcx\n");
+			  gc.code.append("push rdx\n");
+			  aol.generateCode(gc);
+			  gc.code.append("pop rdx\n");
+			  gc.code.append("pop rcx\n");
+			  gc.code.append("pop rbx\n");
+			  gc.code.append("pop rax\n");
+		  }
+	  } else {
+		  simpleGenerate(gc);
+	  }
+	  return null;
   }
 
 }

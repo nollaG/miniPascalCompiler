@@ -2,14 +2,174 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package compiler;
 
+import codeGenerator.GenerateException;
+import codeGenerator.GeneratorContext;
+import codeGenerator.Label;
+import codeGenerator.Register;
+import codeGenerator.Type;
+import codeGenerator.Variable;
+
 public
 class ASTfor_statement extends SimpleNode {
+	private String opt;
   public ASTfor_statement(int id) {
     super(id);
   }
 
   public ASTfor_statement(Pascal p, int id) {
     super(p, id);
+  }
+  public void setOpt(String o) {
+	  opt=o;
+  }
+  public String getOpt() {
+	  return opt;
+  }
+  public Object generateCode(GeneratorContext gc) throws GenerateException{
+	  if (children!=null && children.length==4) {
+		 if (!gc.generate) {//type check
+			 if (children[0]!=null && children[0] instanceof ASTvariable_identifier) {
+				 ASTvariable_identifier avi=(ASTvariable_identifier)children[0];
+				 if (avi.children!=null && avi.children.length==1 && avi.children[0] instanceof ASTidentifier) {
+					 Token id=((ASTidentifier)avi.children[0]).getToken();
+					 Variable tv=gc.getComponent(id.image);
+					 if (tv==null) {
+						 throw new GenerateException(String.format("No variable called '%s'",id.image),id);
+					 } else {
+						 if (tv.type!=gc.globalTypeMap.get("integer")) {
+							 throw new GenerateException("Iterator variable must be a integer!\n",id);
+						 }
+					 }
+				 }
+			 }
+			 if (children[1]!=null && children[1] instanceof ASTinitial_expression) {
+				 ASTinitial_expression aie=(ASTinitial_expression)children[1];
+				 if (aie.children!=null && aie.children.length==1 && aie.children[0] instanceof ASTexpression) {
+					 Type et=((ASTexpression)aie.children[0]).getType(gc);
+					 if (et!=gc.globalTypeMap.get("integer")) {
+						 throw new GenerateException("Initial value must be a integer!\n",((ASTexpression)aie.children[0]).currentToken);
+					 }
+				 }
+			 }
+			 if (children[2]!=null && children[2] instanceof ASTfinal_expression) {
+				 ASTfinal_expression afe=(ASTfinal_expression)children[2];
+				 if (afe.children!=null && afe.children.length==1 && afe.children[0] instanceof ASTexpression) {
+					 Type et=((ASTexpression)afe.children[0]).getType(gc);
+					 if (et!=gc.globalTypeMap.get("integer")) {
+						 throw new GenerateException("Final value must be a integer!\n",((ASTexpression)afe.children[0]).currentToken);
+					 }
+				 }
+			 }
+			 if (children[3]!=null && children[3] instanceof ASTstatement) {
+				 ((ASTstatement)children[3]).generateCode(gc);
+			 }
+		 } else {
+			 if (children[0]!=null && children[0] instanceof ASTvariable_identifier) {
+				 ASTvariable_identifier avi=(ASTvariable_identifier)children[0];
+				 if (avi.children!=null && avi.children.length==1 && avi.children[0] instanceof ASTidentifier) {
+					 Token id=((ASTidentifier)avi.children[0]).getToken();
+					 Variable tv=gc.getComponent(id.image);
+					 if (tv!=null) {
+						 Register rg=gc.moveVariablePointerToReg(id.image);
+						 gc.code.append(String.format("push %s\n",rg));
+						 rg.release();
+					 } else {
+						 throw new GenerateException(String.format("No variable called '%s'",id.image),id);
+					 }
+				 }
+			 }
+			 if (children[1]!=null && children[1] instanceof ASTinitial_expression) {
+				 ASTinitial_expression aie=(ASTinitial_expression)children[1];
+				 if (aie.children!=null && aie.children.length==1 && aie.children[0] instanceof ASTexpression) {
+					 Register rg=((ASTexpression)aie.children[0]).generateCode(gc);
+					 Register dstrg=gc.registerManager.getFreeRegister();
+					 gc.code.append(String.format("pop %s\n", dstrg));
+					 gc.code.append(String.format("mov [%s],%s\n",dstrg,rg));
+					 rg.release();
+					 dstrg.release();
+				 }
+			 }
+			 if (children[2]!=null && children[2] instanceof ASTfinal_expression) {
+				 ASTfinal_expression afe=(ASTfinal_expression)children[2];
+				 if (afe.children!=null && afe.children.length==1 && afe.children[0] instanceof ASTexpression) {
+					 ASTexpression final_expression = (ASTexpression)afe.children[0];
+					 if (children[3]!=null && children[3] instanceof ASTstatement) {
+						 ASTstatement ast=(ASTstatement)children[3];
+						 if (this.getOpt().equals("to")) {
+							 Token id=((ASTidentifier)((ASTvariable_identifier)children[0]).children[0]).getToken();
+							 Register itReg=gc.moveVariablePointerToReg(id.image);
+							 gc.code.append(String.format("push %s\n",itReg));
+							 itReg.release();
+							 Register rg=final_expression.generateCode(gc);
+							 itReg=gc.registerManager.getFreeRegister();
+							 gc.code.append(String.format("pop %s\n",itReg));
+							 gc.code.append(String.format("mov %s,[%s]\n",itReg,itReg));
+							 gc.code.append(String.format("cmp %s,%s\n",itReg,rg));
+							 itReg.release();
+							 rg.release();
+							 Label endfor=gc.labelManager.getNewLabel();
+							 Label beginfor=gc.labelManager.getNewLabel();
+							 gc.code.append(String.format("jg %s\n",endfor));//
+							 gc.code.append(String.format("%s: ", beginfor));
+							 ast.generateCode(gc);
+							 itReg=gc.moveVariablePointerToReg(id.image);
+							 gc.code.append(String.format("mov %s,[%s]\n",itReg,itReg)); //get i value
+							 gc.code.append(String.format("add %s,1\n",itReg)); //i++
+							 gc.code.append(String.format("push %s\n", itReg));
+							 itReg.release();
+							 itReg=gc.moveVariablePointerToReg(id.image);
+							 rg=gc.registerManager.getFreeRegister(); //rg=i++
+							 gc.code.append(String.format("pop %s\n", rg));
+							 gc.code.append(String.format("mov [%s],%s\n", itReg,rg));
+							 itReg.release();
+							 Register rg2=final_expression.generateCode(gc);
+							 gc.code.append(String.format("cmp %s,%s\n",rg,rg2));
+							 gc.code.append(String.format("jle %s\n", beginfor));//
+							 gc.code.append(String.format("%s: ", endfor));
+							 rg.release();
+							 rg2.release();
+						 } else  if (this.getOpt().equals("downto")) {
+							 Token id=((ASTidentifier)((ASTvariable_identifier)children[0]).children[0]).getToken();
+							 Register itReg=gc.moveVariablePointerToReg(id.image);
+							 gc.code.append(String.format("push %s\n",itReg));
+							 itReg.release();
+							 Register rg=final_expression.generateCode(gc);
+							 itReg=gc.registerManager.getFreeRegister();
+							 gc.code.append(String.format("pop %s\n",itReg));
+							 gc.code.append(String.format("mov %s,[%s]\n",itReg,itReg));
+							 gc.code.append(String.format("cmp %s,%s\n",itReg,rg));
+							 itReg.release();
+							 rg.release();
+							 Label endfor=gc.labelManager.getNewLabel();
+							 Label beginfor=gc.labelManager.getNewLabel();
+							 gc.code.append(String.format("jl %s\n",endfor));//
+							 gc.code.append(String.format("%s: ", beginfor));
+							 ast.generateCode(gc);
+							 itReg=gc.moveVariablePointerToReg(id.image);
+							 gc.code.append(String.format("mov %s,[%s]\n",itReg,itReg)); //get i value
+							 gc.code.append(String.format("sub %s,1\n",itReg)); //i--
+							 gc.code.append(String.format("push %s\n", itReg));
+							 itReg.release();
+							 itReg=gc.moveVariablePointerToReg(id.image);
+							 rg=gc.registerManager.getFreeRegister(); //rg=i--
+							 gc.code.append(String.format("pop %s\n", rg));
+							 gc.code.append(String.format("mov [%s],%s\n", itReg,rg));
+							 itReg.release();
+							 Register rg2=final_expression.generateCode(gc);
+							 gc.code.append(String.format("cmp %s,%s\n",rg,rg2));
+							 gc.code.append(String.format("jge %s\n", beginfor));//
+							 gc.code.append(String.format("%s: ", endfor));
+							 rg.release();
+							 rg2.release();
+						 }
+					 }
+				 }
+			 }
+		 }
+	  } else {
+		  throw new GenerateException("Something Very Bad!\n");
+	  }
+	  return null;
   }
 
 }

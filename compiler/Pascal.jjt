@@ -306,9 +306,12 @@ void repeat_statement():
 }
 
 void for_statement():
-{}
+{Token t;}
 {
-    < FOR > variable_identifier() < COLON_EQUALS > initial_expression() (<TO> | <DOWNTO>) final_expression() <DO> statement()
+  (
+    < FOR > variable_identifier() < COLON_EQUALS > initial_expression() (t=<TO> | t=<DOWNTO>) final_expression() <DO> statement()
+  )  {    jjtThis.setOpt(t.image);
+  }
 }
 
 void initial_expression():

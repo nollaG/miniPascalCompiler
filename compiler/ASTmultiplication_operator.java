@@ -16,5 +16,10 @@ class ASTmultiplication_operator extends SimpleNode {
 	  opt=o;
   }
   public String toString() { return "multiplication_operator \"" + opt +"\"";}
+
+public String getOpt() {
+	// TODO Auto-generated method stub
+	return opt;
+}
 }
 /* JavaCC - OriginalChecksum=695065028cc6e5a8e2ee6dabef185186 (do not edit this line) */

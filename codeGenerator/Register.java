@@ -27,6 +27,10 @@ public class Register {
 		}
 	}
 	
+	public String getLowByte() {
+		return registerName.substring(1, 2)+"l";
+	}
+	
 	public String toString() {
 		return registerName;
 	}

@@ -21,7 +21,10 @@ public class Procedure {
 		for (int i=0;i<parameter_list.size();++i) {
 			if (parameter_list.get(i).name.equals(t.name))
 				return false;
-			toffset+=parameter_list.get(i).type.getTypeSize();
+			if (parameter_list.get(i).isVar)
+				toffset+=1;
+			else
+				toffset+=parameter_list.get(i).type.getTypeSize();
 		}
 		t.offset=toffset+2;
 		parameter_list.add(t);

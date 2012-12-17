@@ -26,6 +26,8 @@ class ASTprogram extends SimpleNode {
 		  gc.code.append("mov rbx,0   ;exit(0)\n");//exit code
 		  gc.code.append("mov rax,1\n");
 		  gc.code.append("int 0x80\n");
+		  gc.code.append("segment readable writeable\n");
+		  gc.code.append(String.format("%s rb 1\n", gc.getIOBuf()));
 	  }
 	  return null;
   }

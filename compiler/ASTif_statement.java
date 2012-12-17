@@ -43,6 +43,7 @@ class ASTif_statement extends SimpleNode {
 							  gc.code.append(String.format("je %s\n",falseLabel));
 							  expReg.release();
 							  ((ASTstatement)children[1]).generateCode(gc);
+							  gc.code.append(String.format("jmp %s\n", endif));
 							  gc.code.append(String.format("%s: ", falseLabel));
 							  ((ASTstatement)children[2]).generateCode(gc);
 							  gc.code.append(String.format("%s: ", endif));

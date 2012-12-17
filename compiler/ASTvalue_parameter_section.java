@@ -32,6 +32,9 @@ class ASTvalue_parameter_section extends SimpleNode {
 								  ASTidentifier tmp=(ASTidentifier)n;
 								  Component tc=new Component(tmp.getName(),type);
 								  tc.isVar=false;
+								  if (tc.type.getTypeSize()!=1) {
+									  throw new GenerateException(String.format("Can not add non-var parameter of type which size bigger than integer!",tmp.getToken()));
+								  }
 								  if (!gc.currentProcedureOrFunction.addParameter(tc))
 									  throw new GenerateException(String.format("Duplicate parameter name '%s'!\nLine %d,Column %d.\n",
 											  tmp.getName(),tmp.getToken().beginLine,tmp.getToken().beginColumn));

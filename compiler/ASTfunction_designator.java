@@ -22,9 +22,12 @@ class ASTfunction_designator extends SimpleNode {
   public Register generateCode(GeneratorContext gc) throws GenerateException{//return variable type
 	  if (children!=null && children.length>0) {
 		  if (children[0]!=null && children[0] instanceof ASTidentifier) {
+			  String function_name="";
 			  Token functionToken=((ASTidentifier)children[0]).getToken();
 			  if (gc.globalFunctionMap.containsKey(functionToken.image)) {
-				  //TODO:Right
+				  if (gc.generate) {
+					  function_name=functionToken.image;
+				  }
 			  } else {
 				  throw new GenerateException(String.format("No such Function '%s'!",functionToken.image),functionToken);
 			  }
@@ -39,6 +42,65 @@ class ASTfunction_designator extends SimpleNode {
 				  if (!gc.globalFunctionMap.get(functionToken.image).checkParameter(new ArrayList<Type>())) {
 					  throw new GenerateException("Parameter Error!\n",functionToken);
 				  }
+			  }
+			  
+			  if (gc.generate) {
+				  
+				  
+				  
+				  
+				  int pushSize=0;
+				  if (children!=null && children.length>1) {
+					  if (children[1]!=null && children[1] instanceof ASTactual_parameter_list) {
+						  ASTactual_parameter_list apl=(ASTactual_parameter_list)children[1];
+						  if (apl.children!=null) {
+							  pushSize=apl.children.length;
+							  for (int i=apl.children.length-1;i>=0;--i) { //reverse push
+								  if (apl.children[i]!=null && apl.children[i] instanceof ASTactual_parameter) {
+									  ASTactual_parameter ap=(ASTactual_parameter)apl.children[i];
+									  if (ap.children!=null && ap.children.length==1) {
+										  if (ap.children[0]!=null && ap.children[0] instanceof ASTvariable) {
+											  Register rg1=((ASTvariable)ap.children[0]).generateCode(gc);
+											  gc.code.append(String.format("push %s\n", rg1));
+											  rg1.release();
+											  continue;
+										  }
+										  if (ap.children[0]!=null && ap.children[0] instanceof ASTexpression) {
+											  Register rg1=((ASTexpression)ap.children[0]).generateCode(gc);
+											  gc.code.append(String.format("push %s\n", rg1));
+											  rg1.release();
+											  continue;
+										  }
+									  } else {
+										  throw new GenerateException("Something Very Bad!\n");
+									  }
+								  } else {
+									  throw new GenerateException("Something Very Bad!\n");
+								  }
+							  }
+						  } else {
+							  throw new GenerateException("Something Very Bad!\n");
+						  }
+					  }
+				  }
+				  
+				  
+				  
+				  
+				  
+				  if (!gc.registerManager.checkAllFree()) {
+					  throw new GenerateException("Fatal Error:Register not Freed when call!\n",this.currentToken);
+				  }
+				  gc.code.append(String.format("call %s\n",function_name));
+				  if (children!=null && children.length>1) {
+					  gc.code.append(String.format("add rsp,%d\n", pushSize*8));
+				  }
+				  Register rax=gc.registerManager.getRegisterByName("rax");
+				  if (!rax.acquire()) {
+					  throw new GenerateException("Fatal Error:rax can not acquired!\n",this.currentToken);
+				  }
+				  System.out.println("========"+rax.isFree);
+				  return rax;
 			  }
 			  return gc.registerManager.getRegisterByName("rax");
 			  } else {

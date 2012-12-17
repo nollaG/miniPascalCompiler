@@ -57,6 +57,9 @@ public class GeneratorContext {
 		}
 		return tmp;
 	}
+	public Label getIOBuf() {
+		return new Label("io_buf");
+	}
 	public boolean addGlobalVariable(Variable v) {
 		for (int i=0;i<globalVariableList.size();i++)
 			if (globalVariableList.get(i).name.equals(v.name))
@@ -64,7 +67,6 @@ public class GeneratorContext {
 		globalVariableList.add(v);
 		return true;
 	}
-	
 	public Variable getComponent(String t) {
 		if (currentProcedureOrFunction!=null) {
 			for (int i=0;i<currentProcedureOrFunction.localvariable_list.size();++i) {
@@ -96,7 +98,7 @@ public class GeneratorContext {
 				if (currentProcedureOrFunction.parameter_list.get(i).name.equals(t)) {
 					if (currentProcedureOrFunction.parameter_list.get(i).isVar) {
 						code.append(String.format("lea %s,[rbp+%d]\n",dstRegister.toString(),currentProcedureOrFunction.parameter_list.get(i).offset*8));
-						code.append(String.format("mov %s,[%s]", dstRegister,dstRegister));
+						code.append(String.format("mov %s,[%s]\n", dstRegister,dstRegister));
 					}else {
 						code.append(String.format("lea %s,[rbp+%d]\n",dstRegister.toString(),currentProcedureOrFunction.parameter_list.get(i).offset*8));
 					}
