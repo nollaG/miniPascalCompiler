@@ -88,11 +88,9 @@ public class PascalCompiler {
 			while (itp.hasNext()) {
 				System.out.println(itp.next().toString());
 			}
-			System.out.println("Global Variable:"+gc.globalVariableListToString());
-			System.out.println("code:"+gc.code.toString());
 			return "Type Checking Success!\nNo Error Detected.\n";
 		}catch(GenerateException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return "TypeCheck Error!\n"+e.getMessage();
 		}
 	}
@@ -105,11 +103,9 @@ public class PascalCompiler {
 		try {
 			gc.generate=true;
 			prevASTProgram.generateCode(gc);
-			System.out.println(String.format("Register All released:%s!\n",gc.registerManager.checkAllFree()));
 			return gc.code.toString();
 		}catch(GenerateException e) {
-			e.printStackTrace();
-			System.out.println("code:"+gc.code.toString());
+//			e.printStackTrace();
 			return "Generate Error!\n"+e.getMessage();
 		}
 		

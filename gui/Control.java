@@ -1,6 +1,8 @@
 package gui;
 import javax.swing.*;
 
+import codeGenerator.PreProcessor;
+
 import compiler.ParseException;
 import compiler.PascalCompiler;
 
@@ -53,8 +55,9 @@ public class Control {
 	}
 	public void pressedNewButton()
 	{
-		if(newFile == false || editor.codeEditor.getText() .isEmpty() == false)
+		if(newFile == false || editor.codeEditor.getText().isEmpty() == false) {
 			pressedSaveAsButton();
+		}
 		editor.codeEditor.setText("");
 		newFile = true;
 	}
@@ -68,6 +71,7 @@ public class Control {
 		File file = fc.getSelectedFile();
 		try {
 			FileWriter writer = new FileWriter(file);
+			fileOpened=file;
 			editor.codeEditor.write(writer);
 			writer.close();
 			newFile = false;
@@ -78,7 +82,7 @@ public class Control {
 	}
 	public void pressedSaveButton()
 	{
-		if(newFile == true)
+		if(newFile)
 		{
 			pressedSaveAsButton();
 			return;
@@ -118,11 +122,11 @@ public class Control {
 	}
 	public void pressLexAnalysisButton()
 	{
-		console.setText(PascalCompiler.lexicalAnalysis(editor.codeEditor.getText()));
+		console.setText(PascalCompiler.lexicalAnalysis(PreProcessor.preProcess(editor.codeEditor.getText())));
 	}
 	public void pressSynAnalysisButton()
 	{
-		console.setText(PascalCompiler.syntaxParsing(editor.codeEditor.getText()));
+		console.setText(PascalCompiler.syntaxParsing(PreProcessor.preProcess(editor.codeEditor.getText())));
 	}
 	public void pressTypeCheckingButton() {
 		console.setText(PascalCompiler.typeChecking());

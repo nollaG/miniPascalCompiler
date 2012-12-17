@@ -99,7 +99,6 @@ class ASTfunction_designator extends SimpleNode {
 				  if (!rax.acquire()) {
 					  throw new GenerateException("Fatal Error:rax can not acquired!\n",this.currentToken);
 				  }
-				  System.out.println("========"+rax.isFree);
 				  return rax;
 			  }
 			  return gc.registerManager.getRegisterByName("rax");
