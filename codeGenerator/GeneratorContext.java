@@ -85,7 +85,6 @@ public class GeneratorContext {
 		return null;
 	}
 	public Register moveVariablePointerToReg(String t) throws GenerateException { //return reg,ensure t exists
-		System.out.println(String.format("VariableName=%s\n",t));
 		Register dstRegister=registerManager.getFreeRegister();
 		if (currentProcedureOrFunction!=null) {
 			for (int i=0;i<currentProcedureOrFunction.localvariable_list.size();++i) {

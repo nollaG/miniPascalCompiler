@@ -45,7 +45,8 @@ class ASTvariable extends SimpleNode {
 									  currentType=((ArrayType)currentType).elementType;
 									  Register rg2=((ASTexpression)ael.children[j]).generateCode(gc);
 									  gc.code.append(String.format("sub %s,%d\n",rg2,low));
-									  gc.code.append(String.format("lea %s,[%s+%s*%d]\n",dstRegister,dstRegister,rg2,currentType.getTypeSize()*8));
+									  gc.code.append(String.format("imul %s,%s,%d\n",rg2,rg2,currentType.getTypeSize()*8));
+									  gc.code.append(String.format("add %s,%s\n",dstRegister,rg2));
 									  rg2.release();
 								  } else {
 									  throw new GenerateException("Invalid Array reference!",((ASTexpression)ael.children[j]).currentToken);
