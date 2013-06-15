@@ -4,6 +4,7 @@ package compiler;
 
 import codeGenerator.GenerateException;
 import codeGenerator.GeneratorContext;
+import codeGenerator.IntegerType;
 import codeGenerator.Register;
 import codeGenerator.Type;
 
@@ -23,7 +24,14 @@ class ASTassignment_statement extends SimpleNode {
 		  if (type1!=type2) {
 			  throw new GenerateException("Type does not match!",((ASTexpression)children[1]).currentToken);
 		  }
+
 		  if (gc.generate) {
+			  if (!(type1 instanceof IntegerType)) {
+				  throw new GenerateException("Can not assign Non-integer type!",((ASTexpression)children[1]).currentToken);
+			  }
+			  if (!(type2 instanceof IntegerType)) {
+				  throw new GenerateException("Can not assign Non-integer type!",((ASTvariable)children[0]).currentToken);
+			  }
 			  Register rg1=((ASTvariable)children[0]).generateCode(gc);
 			  gc.code.append(String.format("push %s\n",rg1));
 			  rg1.release();

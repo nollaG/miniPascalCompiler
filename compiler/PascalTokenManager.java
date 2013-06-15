@@ -830,7 +830,6 @@ protected char curChar;
 public PascalTokenManager(SimpleCharStream stream){
    if (SimpleCharStream.staticFlag)
       throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
-   currentToken=null;
    input_stream = stream;
 }
 
@@ -920,7 +919,6 @@ public Token getNextToken()
    {
       jjmatchedKind = 0;
       matchedToken = jjFillToken();
-      currentToken=matchedToken;
       return matchedToken;
    }
 
@@ -939,7 +937,6 @@ public Token getNextToken()
       if ((jjtoToken[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
       {
          matchedToken = jjFillToken();
-      currentToken=matchedToken;
          return matchedToken;
       }
       else
@@ -996,6 +993,5 @@ private void jjCheckNAddStates(int start, int end)
       jjCheckNAdd(jjnextStates[start]);
    } while (start++ != end);
 }
-public static Token currentToken;
 
 }

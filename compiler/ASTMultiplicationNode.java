@@ -116,6 +116,15 @@ class ASTMultiplicationNode extends SimpleNode {
 		  if (children[2]!=null && children[2] instanceof ASTfactor) {
 			  type2=((ASTfactor)children[2]).getType(gc);
 		  }
+		  if (gc.generate) {
+		      if (!(type1 instanceof IntegerType)) {
+				  throw new GenerateException("Can not calculate with Non-integer Type!",((SimpleNode)children[0]).currentToken);
+			  }
+		      if (!(type2 instanceof IntegerType)) {
+				  throw new GenerateException("Can not calculate with Non-integer Type!",((SimpleNode)children[2]).currentToken);
+			  }
+		      return type1;
+		  }
 		  if (type1 instanceof RecordType || type1 instanceof ArrayType) {
 			  throw new GenerateException("Can not calculate with NonSimpleType!",((SimpleNode)children[0]).currentToken);
 		  }
@@ -123,15 +132,15 @@ class ASTMultiplicationNode extends SimpleNode {
 			  throw new GenerateException("Can not calculate with NonSimpleType!",((SimpleNode)children[2]).currentToken);
 		  }
 		  if (type1 instanceof RealType) {
-			  throw new GenerateException("Can not calculate with CharType!",((SimpleNode)children[0]).currentToken);
+			  return type1;
 		  }
-	      if (type2 instanceof RealType) {
-			  throw new GenerateException("Can not calculate with CharType!",((SimpleNode)children[2]).currentToken);
+		  if (type2 instanceof RealType) {
+			  return type2;
 		  }
 		  if (type1 instanceof IntegerType) {
 			  return type1;
 		  }
-	      if (type2 instanceof IntegerType) {
+		  if (type2 instanceof IntegerType) {
 			  return type2;
 		  }
 	      return type1;

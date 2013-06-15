@@ -70,7 +70,7 @@ class ASTvariable extends SimpleNode {
 					  boolean flag=false;
 					  for (int j=0;j<rt.componentList.size();++j) {
 						  if (rt.componentList.get(j).name.equals(t.image)) {
-							  gc.code.append(String.format("lea %s,[%s+%d]\n",dstRegister,dstRegister,rt.componentList.get(j).offset));
+							  gc.code.append(String.format("lea %s,[%s+%d]\n",dstRegister,dstRegister,rt.componentList.get(j).offset*8));
 							  currentType=rt.componentList.get(j).type;
 							  flag=true;
 							  break;

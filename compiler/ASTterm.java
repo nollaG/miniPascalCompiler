@@ -30,6 +30,8 @@ class ASTterm extends SimpleNode {
 			  }
 			  throw new GenerateException("Something Very Bad!\n");
 		  }
+	  } else {
+		  simpleGenerate(gc);
 	  }
 	  throw new GenerateException("Something Very Bad!\n");
   }

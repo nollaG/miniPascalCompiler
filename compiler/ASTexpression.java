@@ -140,6 +140,15 @@ class ASTexpression extends SimpleNode {
 		  } else {
 			  throw new GenerateException("Something Very Bad!\n");
 		  }
+		  if (gc.generate) {
+		      if (!(type1 instanceof IntegerType)) {
+				  throw new GenerateException("Can not compare with Non-integer Type!",((SimpleNode)children[0]).currentToken);
+			  }
+		      if (!(type2 instanceof IntegerType)) {
+				  throw new GenerateException("Can not compare with Non-integer Type!",((SimpleNode)children[2]).currentToken);
+			  }
+			  return type1;
+		  }
 		  if (type1 instanceof RecordType || type1 instanceof ArrayType) {
 			  throw new GenerateException("Can not Compare with NonSimpleType!",((SimpleNode)children[0]).currentToken);
 		  }

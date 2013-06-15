@@ -34,6 +34,8 @@ class ASTfactor extends SimpleNode {
 		  if (children!=null && children.length==1 && children[0]!=null && children[0] instanceof ASTnumber) {
 			  return ((ASTnumber)children[0]).generateCode(gc);
 		  }
+	  } else {
+		  simpleGenerate(gc);
 	  }
 	  throw new GenerateException("Something Very Bad!\n");
   }

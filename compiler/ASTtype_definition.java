@@ -22,12 +22,16 @@ class ASTtype_definition extends SimpleNode {
 				  Type type=(Type)((ASTtype)children[1]).generateCode(gc);
 				  String typename=((ASTidentifier)children[0]).getName();
 				  if (type!=null) {
-					  if(!gc.globalTypeMap.containsKey(typename)) {
-						  gc.globalTypeMap.put(typename, type);
-						  return null;
+					  if (gc.currentProcedureOrFunction==null) {
+						  if(!gc.globalTypeMap.containsKey(typename)) {
+							  gc.globalTypeMap.put(typename, type);
+							  return null;
+						  } else {
+							  throw new GenerateException(String.format("There is a type called %s\nLine %d,Column %d.\n",
+									  typename,((ASTidentifier)children[0]).getToken().beginLine,((ASTidentifier)children[0]).getToken().beginColumn));
+						  }
 					  } else {
-						  throw new GenerateException(String.format("There is a type called %s\nLine %d,Column %d.\n",
-								  typename,((ASTidentifier)children[0]).getToken().beginLine,((ASTidentifier)children[0]).getToken().beginColumn));
+						  throw new GenerateException("Can not define type in procedure or function!",((ASTidentifier)children[0]).getToken());
 					  }
 				  } else {
 					  throw new GenerateException("Something Very Bad!\n");
