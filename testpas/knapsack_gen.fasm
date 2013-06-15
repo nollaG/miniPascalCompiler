@@ -1,0 +1,570 @@
+format elf64 executable 3
+entry _main
+
+segment readable writeable
+itemarray rq 20
+f rq 100
+n rq 1
+m rq 1
+i rq 1
+j rq 1
+
+segment readable executable
+readnum:
+push rbp
+mov rbp,rsp
+sub rsp,8
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,0
+pop rbx
+mov [rbx],rax
+push rax
+push rbx
+push rcx
+push rdx
+mov rax,3   ;read
+mov rbx,0   ;stdin
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+mov al,[io_buf]
+push rax
+lea rax,[rbp-8]
+pop rbx
+mov [rax],rbx
+pop rdx
+pop rcx
+pop rbx
+pop rax
+lea rax,[rbp-8]
+mov rax,[rax]
+push rax
+mov rax,10
+pop rbx
+cmp rbx,rax
+jne .L0
+mov rbx,0
+jmp .L1
+.L0: mov rbx,1
+.L1: push rbx
+lea rax,[rbp-8]
+mov rax,[rax]
+push rax
+mov rax,32
+pop rbx
+cmp rbx,rax
+jne .L2
+mov rbx,0
+jmp .L3
+.L2: mov rbx,1
+.L3: pop rax
+and rax,rbx
+cmp rax,0
+je .L4
+.L5: lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+lea rax,[rbp+16]
+mov rax,[rax]
+mov rax,[rax]
+push rax
+mov rax,10
+pop rbx
+imul rbx,rax
+push rbx
+lea rax,[rbp-8]
+mov rax,[rax]
+pop rbx
+add rbx,rax
+push rbx
+mov rax,48
+pop rbx
+sub rbx,rax
+pop rax
+mov [rax],rbx
+push rax
+push rbx
+push rcx
+push rdx
+mov rax,3   ;read
+mov rbx,0   ;stdin
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+mov al,[io_buf]
+push rax
+lea rax,[rbp-8]
+pop rbx
+mov [rax],rbx
+pop rdx
+pop rcx
+pop rbx
+pop rax
+lea rax,[rbp-8]
+mov rax,[rax]
+push rax
+mov rax,10
+pop rbx
+cmp rbx,rax
+jne .L6
+mov rbx,0
+jmp .L7
+.L6: mov rbx,1
+.L7: push rbx
+lea rax,[rbp-8]
+mov rax,[rax]
+push rax
+mov rax,32
+pop rbx
+cmp rbx,rax
+jne .L8
+mov rbx,0
+jmp .L9
+.L8: mov rbx,1
+.L9: pop rax
+and rax,rbx
+cmp rax,0
+jne .L5
+.L4: mov rsp,rbp
+pop rbp
+ret
+readitem:
+push rbp
+mov rbp,rsp
+sub rsp,0
+lea rax,[rbp+16]
+mov rax,[rax]
+lea rax,[rax+0]
+push rax
+call readnum
+add rsp,8
+lea rax,[rbp+16]
+mov rax,[rax]
+lea rax,[rax+8]
+push rax
+call readnum
+add rsp,8
+mov rsp,rbp
+pop rbp
+ret
+printnum:
+push rbp
+mov rbp,rsp
+sub rsp,176
+lea rax,[rbp-176]
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,0
+pop rbx
+cmp rbx,rax
+jne .L10
+mov rbx,0
+jmp .L11
+.L10: mov rbx,1
+.L11: cmp rbx,0
+je .L12
+.L13: lea rax,[rbp-160]
+lea rbx,[rbp-176]
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+push rax
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,10
+mov rbx,rax
+pop rax
+xor rdx,rdx
+idiv rbx
+pop rax
+mov [rax],rdx
+lea rax,[rbp-176]
+push rax
+lea rax,[rbp-176]
+mov rax,[rax]
+push rax
+mov rax,1
+pop rbx
+add rbx,rax
+pop rax
+mov [rax],rbx
+lea rax,[rbp+16]
+push rax
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,10
+mov rbx,rax
+pop rax
+xor rdx,rdx
+idiv rbx
+pop rbx
+mov [rbx],rax
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,0
+pop rbx
+cmp rbx,rax
+jne .L14
+mov rbx,0
+jmp .L15
+.L14: mov rbx,1
+.L15: cmp rbx,0
+jne .L13
+.L12: lea rax,[rbp-176]
+mov rax,[rax]
+push rax
+mov rax,1
+pop rbx
+cmp rbx,rax
+je .L16
+mov rbx,0
+jmp .L17
+.L16: mov rbx,1
+.L17: cmp rbx,0
+je .L18
+lea rax,[rbp-176]
+push rax
+lea rax,[rbp-176]
+mov rax,[rax]
+push rax
+mov rax,1
+pop rbx
+add rbx,rax
+pop rax
+mov [rax],rbx
+.L18: lea rax,[rbp-168]
+push rax
+lea rax,[rbp-176]
+mov rax,[rax]
+push rax
+mov rax,1
+pop rbx
+sub rbx,rax
+pop rax
+mov [rax],rbx
+lea rax,[rbp-168]
+push rax
+mov rax,1
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jl .L19
+.L20: push rax
+push rbx
+push rcx
+push rdx
+lea rax,[rbp-160]
+lea rbx,[rbp-168]
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+mov rax,[rax]
+push rax
+mov rax,48
+pop rbx
+add rbx,rax
+mov [io_buf],bl
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+lea rax,[rbp-168]
+mov rax,[rax]
+sub rax,1
+push rax
+lea rax,[rbp-168]
+pop rbx
+mov [rax],rbx
+mov rax,1
+cmp rbx,rax
+jge .L20
+.L19: mov rsp,rbp
+pop rbp
+ret
+maxnum:
+push rbp
+mov rbp,rsp
+sub rsp,8
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+lea rax,[rbp+24]
+mov rax,[rax]
+pop rbx
+cmp rbx,rax
+jg .L21
+mov rbx,0
+jmp .L22
+.L21: mov rbx,1
+.L22: cmp rbx,0
+je .L23
+lea rax,[rbp-8]
+push rax
+lea rax,[rbp+16]
+mov rax,[rax]
+pop rbx
+mov [rbx],rax
+jmp .L24
+.L23: lea rax,[rbp-8]
+push rax
+lea rax,[rbp+24]
+mov rax,[rax]
+pop rbx
+mov [rbx],rax
+.L24: lea rax,[rbp-8]
+mov rax,[rax]
+mov rsp,rbp
+pop rbp
+ret
+_main:
+mov rax,n
+push rax
+call readnum
+add rsp,8
+mov rax,m
+push rax
+call readnum
+add rsp,8
+mov rax,i
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,n
+mov rax,[rax]
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jg .L25
+.L26: mov rax,itemarray
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,16
+add rax,rbx
+push rax
+call readitem
+add rsp,8
+mov rax,i
+mov rax,[rax]
+add rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,n
+mov rax,[rax]
+cmp rbx,rax
+jle .L26
+.L25: mov rax,i
+push rax
+mov rax,m
+mov rax,[rax]
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,0
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jl .L27
+.L28: mov rax,f
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+push rax
+mov rax,0
+pop rbx
+mov [rbx],rax
+mov rax,i
+mov rax,[rax]
+sub rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,0
+cmp rbx,rax
+jge .L28
+.L27: mov rax,i
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,n
+mov rax,[rax]
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jg .L29
+.L30: mov rax,j
+push rax
+mov rax,m
+mov rax,[rax]
+pop rbx
+mov [rbx],rax
+mov rax,j
+push rax
+mov rax,0
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jl .L31
+.L32: mov rax,j
+mov rax,[rax]
+push rax
+mov rax,itemarray
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,16
+add rax,rbx
+lea rax,[rax+0]
+mov rax,[rax]
+pop rbx
+cmp rbx,rax
+jge .L33
+mov rbx,0
+jmp .L34
+.L33: mov rbx,1
+.L34: cmp rbx,0
+je .L35
+mov rax,f
+mov rbx,j
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+push rax
+mov rax,f
+mov rbx,j
+mov rbx,[rbx]
+push rbx
+mov rbx,itemarray
+mov rcx,i
+mov rcx,[rcx]
+sub rcx,1
+imul rcx,rcx,16
+add rbx,rcx
+lea rbx,[rbx+0]
+mov rbx,[rbx]
+pop rcx
+sub rcx,rbx
+sub rcx,1
+imul rcx,rcx,8
+add rax,rcx
+mov rax,[rax]
+push rax
+mov rax,itemarray
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,16
+add rax,rbx
+lea rax,[rax+8]
+mov rax,[rax]
+pop rbx
+add rbx,rax
+push rbx
+mov rax,f
+mov rbx,j
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+mov rax,[rax]
+push rax
+call maxnum
+add rsp,16
+pop rbx
+mov [rbx],rax
+.L35: mov rax,j
+mov rax,[rax]
+sub rax,1
+push rax
+mov rax,j
+pop rbx
+mov [rax],rbx
+mov rax,0
+cmp rbx,rax
+jge .L32
+.L31: mov rax,i
+mov rax,[rax]
+add rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,n
+mov rax,[rax]
+cmp rbx,rax
+jle .L30
+.L29: push rax
+push rbx
+push rcx
+push rdx
+mov rax,10
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rax,f
+mov rbx,m
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+mov rax,[rax]
+push rax
+call printnum
+add rsp,8
+push rax
+push rbx
+push rcx
+push rdx
+mov rax,10
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rbx,0   ;exit(0)
+mov rax,1
+int 0x80
+segment readable writeable
+io_buf rb 1

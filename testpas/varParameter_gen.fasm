@@ -1,0 +1,85 @@
+format elf64 executable 3
+entry _main
+
+segment readable writeable
+i rq 1
+
+segment readable executable
+change:
+push rbp
+mov rbp,rsp
+sub rsp,0
+lea rax,[rbp+16]
+mov rax,[rax]
+push rax
+mov rax,3
+push rax
+mov rax,48
+pop rbx
+add rbx,rax
+pop rax
+mov [rax],rbx
+mov rsp,rbp
+pop rbp
+ret
+_main:
+mov rax,i
+push rax
+mov rax,48
+pop rbx
+mov [rbx],rax
+push rax
+push rbx
+push rcx
+push rdx
+mov rax,i
+mov rax,[rax]
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+mov rax,10
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rax,i
+push rax
+call change
+add rsp,8
+push rax
+push rbx
+push rcx
+push rdx
+mov rax,i
+mov rax,[rax]
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+mov rax,10
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rbx,0   ;exit(0)
+mov rax,1
+int 0x80
+segment readable writeable
+io_buf rb 1

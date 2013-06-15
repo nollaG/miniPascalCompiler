@@ -1,0 +1,144 @@
+format elf64 executable 3
+entry _main
+
+segment readable writeable
+a rq 11
+i rq 1
+
+segment readable executable
+_main:
+mov rax,a
+mov rbx,1
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,72
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,2
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,101
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,3
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,108
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,4
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,108
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,5
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,111
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,6
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,87
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,7
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,111
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,8
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,114
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,9
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,108
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,10
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,100
+pop rbx
+mov [rbx],rax
+mov rax,a
+mov rbx,11
+sub rbx,1
+lea rax,[rax+rbx*8]
+push rax
+mov rax,10
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,11
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jg .L0
+.L1: push rax
+push rbx
+push rcx
+push rdx
+mov rax,a
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+lea rax,[rax+rbx*8]
+mov rax,[rax]
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rax,i
+mov rax,[rax]
+add rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,11
+cmp rbx,rax
+jle .L1
+.L0: mov rbx,0   ;exit(0)
+mov rax,1
+int 0x80
+segment readable writeable
+io_buf rb 1

@@ -1,0 +1,124 @@
+format elf64 executable 3
+entry _main
+
+segment readable writeable
+a rq 100
+i rq 1
+sum rq 1
+
+segment readable executable
+_main:
+mov rax,i
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,10
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jg .L0
+.L1: mov rax,a
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,80
+add rax,rbx
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+push rax
+mov rax,i
+mov rax,[rax]
+pop rbx
+mov [rbx],rax
+mov rax,i
+mov rax,[rax]
+add rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,10
+cmp rbx,rax
+jle .L1
+.L0: mov rax,sum
+push rax
+mov rax,0
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,1
+pop rbx
+mov [rbx],rax
+mov rax,i
+push rax
+mov rax,10
+pop rbx
+mov rbx,[rbx]
+cmp rbx,rax
+jg .L2
+.L3: mov rax,sum
+push rax
+mov rax,sum
+mov rax,[rax]
+push rax
+mov rax,a
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,80
+add rax,rbx
+mov rbx,i
+mov rbx,[rbx]
+sub rbx,1
+imul rbx,rbx,8
+add rax,rbx
+mov rax,[rax]
+pop rbx
+add rbx,rax
+pop rax
+mov [rax],rbx
+mov rax,i
+mov rax,[rax]
+add rax,1
+push rax
+mov rax,i
+pop rbx
+mov [rax],rbx
+mov rax,10
+cmp rbx,rax
+jle .L3
+.L2: push rax
+push rbx
+push rcx
+push rdx
+mov rax,sum
+mov rax,[rax]
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+mov rax,10
+mov [io_buf],al
+mov rax,4   ;write
+mov rbx,1   ;stdout
+mov rcx,io_buf
+mov rdx,1   ;len
+int 0x80    ;syscall
+pop rdx
+pop rcx
+pop rbx
+pop rax
+mov rbx,0   ;exit(0)
+mov rax,1
+int 0x80
+segment readable writeable
+io_buf rb 1
