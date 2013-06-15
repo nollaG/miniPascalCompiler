@@ -1,6 +1,8 @@
 This is my Compiler Project,I build it using JavaCC.
 
 The Programming Language is a portion of Pascal.
+You can just run the jar file or compile by your self.
+The jar file is tested in jdk7(x86_64).
 
 The test source code and generated assembly code is in testpas.
 
